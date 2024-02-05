@@ -1,11 +1,12 @@
 /*! @name mux.js @version 7.0.2 @license Apache-2.0 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('global/window')) :
-  typeof define === 'function' && define.amd ? define(['global/window'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.muxjs = factory(global.window));
-}(this, (function (window) { 'use strict';
+    typeof define === 'function' && define.amd ? define(['global/window'], factory) :
+      (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.muxjs = factory(global.window));
+}(this, (function (window) {
+  'use strict';
 
-  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+  function _interopDefaultLegacy(e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
   var window__default = /*#__PURE__*/_interopDefaultLegacy(window);
 
@@ -169,14 +170,14 @@
    * Licensed Apache-2.0 https://github.com/videojs/mux.js/blob/master/LICENSE
    */
   var ONE_SECOND_IN_TS$5 = 90000,
-      // 90kHz clock
-  secondsToVideoTs,
-      secondsToAudioTs,
-      videoTsToSeconds,
-      audioTsToSeconds,
-      audioTsToVideoTs,
-      videoTsToAudioTs,
-      metadataTsToSeconds;
+    // 90kHz clock
+    secondsToVideoTs,
+    secondsToAudioTs,
+    videoTsToSeconds,
+    audioTsToSeconds,
+    audioTsToVideoTs,
+    videoTsToAudioTs,
+    metadataTsToSeconds;
 
   secondsToVideoTs = function secondsToVideoTs(seconds) {
     return seconds * ONE_SECOND_IN_TS$5;
@@ -238,7 +239,7 @@
 
   _AdtsStream = function AdtsStream(handlePartialSegments) {
     var buffer,
-        frameNum = 0;
+      frameNum = 0;
 
     _AdtsStream.prototype.init.call(this);
 
@@ -251,11 +252,11 @@
 
     this.push = function (packet) {
       var i = 0,
-          frameLength,
-          protectionSkipBytes,
-          oldBuffer,
-          sampleCount,
-          adtsFrameDuration;
+        frameLength,
+        protectionSkipBytes,
+        oldBuffer,
+        sampleCount,
+        adtsFrameDuration;
 
       if (!handlePartialSegments) {
         frameNum = 0;
@@ -376,12 +377,12 @@
 
   ExpGolomb = function ExpGolomb(workingData) {
     var // the number of bytes left to examine in workingData
-    workingBytesAvailable = workingData.byteLength,
-        // the current word being examined
-    workingWord = 0,
-        // :uint
-    // the number of bits left to examine in the current word
-    workingBitsAvailable = 0; // :uint;
+      workingBytesAvailable = workingData.byteLength,
+      // the current word being examined
+      workingWord = 0,
+      // :uint
+      // the number of bits left to examine in the current word
+      workingBitsAvailable = 0; // :uint;
     // ():uint
 
     this.length = function () {
@@ -396,8 +397,8 @@
 
     this.loadWord = function () {
       var position = workingData.byteLength - workingBytesAvailable,
-          workingBytes = new Uint8Array(4),
-          availableBytes = Math.min(4, workingBytesAvailable);
+        workingBytes = new Uint8Array(4),
+        availableBytes = Math.min(4, workingBytesAvailable);
 
       if (availableBytes === 0) {
         throw new Error('no bytes available');
@@ -431,8 +432,8 @@
 
     this.readBits = function (size) {
       var bits = Math.min(workingBitsAvailable, size),
-          // :uint
-      valu = workingWord >>> 32 - bits; // :uint
+        // :uint
+        valu = workingWord >>> 32 - bits; // :uint
       // if size > 31, handle error
 
       workingBitsAvailable -= bits;
@@ -524,8 +525,8 @@
 
   _NalByteStream = function NalByteStream() {
     var syncPoint = 0,
-        i,
-        buffer;
+      i,
+      buffer;
 
     _NalByteStream.prototype.init.call(this);
     /*
@@ -673,13 +674,13 @@
 
   _H264Stream = function H264Stream() {
     var nalByteStream = new _NalByteStream(),
-        self,
-        trackId,
-        currentPts,
-        currentDts,
-        discardEmulationPreventionBytes,
-        readSequenceParameterSet,
-        skipScalingList;
+      self,
+      trackId,
+      currentPts,
+      currentDts,
+      discardEmulationPreventionBytes,
+      readSequenceParameterSet,
+      skipScalingList;
 
     _H264Stream.prototype.init.call(this);
 
@@ -794,9 +795,9 @@
 
     skipScalingList = function skipScalingList(count, expGolombDecoder) {
       var lastScale = 8,
-          nextScale = 8,
-          j,
-          deltaScale;
+        nextScale = 8,
+        j,
+        deltaScale;
 
       for (j = 0; j < count; j++) {
         if (nextScale !== 0) {
@@ -819,10 +820,10 @@
 
     discardEmulationPreventionBytes = function discardEmulationPreventionBytes(data) {
       var length = data.byteLength,
-          emulationPreventionBytesPositions = [],
-          i = 1,
-          newLength,
-          newData; // Find all `Emulation Prevention Bytes`
+        emulationPreventionBytesPositions = [],
+        i = 1,
+        newLength,
+        newData; // Find all `Emulation Prevention Bytes`
 
       while (i < length - 2) {
         if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0x03) {
@@ -870,23 +871,23 @@
 
     readSequenceParameterSet = function readSequenceParameterSet(data) {
       var frameCropLeftOffset = 0,
-          frameCropRightOffset = 0,
-          frameCropTopOffset = 0,
-          frameCropBottomOffset = 0,
-          expGolombDecoder,
-          profileIdc,
-          levelIdc,
-          profileCompatibility,
-          chromaFormatIdc,
-          picOrderCntType,
-          numRefFramesInPicOrderCntCycle,
-          picWidthInMbsMinus1,
-          picHeightInMapUnitsMinus1,
-          frameMbsOnlyFlag,
-          scalingListCount,
-          sarRatio = [1, 1],
-          aspectRatioIdc,
-          i;
+        frameCropRightOffset = 0,
+        frameCropTopOffset = 0,
+        frameCropBottomOffset = 0,
+        expGolombDecoder,
+        profileIdc,
+        levelIdc,
+        profileCompatibility,
+        chromaFormatIdc,
+        picOrderCntType,
+        numRefFramesInPicOrderCntCycle,
+        picWidthInMbsMinus1,
+        picHeightInMapUnitsMinus1,
+        frameMbsOnlyFlag,
+        scalingListCount,
+        sarRatio = [1, 1],
+        aspectRatioIdc,
+        i;
       expGolombDecoder = new expGolomb(data);
       profileIdc = expGolombDecoder.readUnsignedByte(); // profile_idc
 
@@ -1168,64 +1169,64 @@
     AVC1_BRAND = new Uint8Array(['a'.charCodeAt(0), 'v'.charCodeAt(0), 'c'.charCodeAt(0), '1'.charCodeAt(0)]);
     MINOR_VERSION = new Uint8Array([0, 0, 0, 1]);
     VIDEO_HDLR = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x00, // pre_defined
-    0x76, 0x69, 0x64, 0x65, // handler_type: 'vide'
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x56, 0x69, 0x64, 0x65, 0x6f, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'VideoHandler'
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x00, // pre_defined
+      0x76, 0x69, 0x64, 0x65, // handler_type: 'vide'
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x56, 0x69, 0x64, 0x65, 0x6f, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'VideoHandler'
     ]);
     AUDIO_HDLR = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x00, // pre_defined
-    0x73, 0x6f, 0x75, 0x6e, // handler_type: 'soun'
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x53, 0x6f, 0x75, 0x6e, 0x64, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'SoundHandler'
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x00, // pre_defined
+      0x73, 0x6f, 0x75, 0x6e, // handler_type: 'soun'
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x53, 0x6f, 0x75, 0x6e, 0x64, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'SoundHandler'
     ]);
     HDLR_TYPES = {
       video: VIDEO_HDLR,
       audio: AUDIO_HDLR
     };
     DREF = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x01, // entry_count
-    0x00, 0x00, 0x00, 0x0c, // entry_size
-    0x75, 0x72, 0x6c, 0x20, // 'url' type
-    0x00, // version 0
-    0x00, 0x00, 0x01 // entry_flags
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x01, // entry_count
+      0x00, 0x00, 0x00, 0x0c, // entry_size
+      0x75, 0x72, 0x6c, 0x20, // 'url' type
+      0x00, // version 0
+      0x00, 0x00, 0x01 // entry_flags
     ]);
     SMHD = new Uint8Array([0x00, // version
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, // balance, 0 means centered
-    0x00, 0x00 // reserved
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, // balance, 0 means centered
+      0x00, 0x00 // reserved
     ]);
     STCO = new Uint8Array([0x00, // version
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x00 // entry_count
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x00 // entry_count
     ]);
     STSC = STCO;
     STSZ = new Uint8Array([0x00, // version
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x00, // sample_size
-    0x00, 0x00, 0x00, 0x00 // sample_count
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x00, // sample_size
+      0x00, 0x00, 0x00, 0x00 // sample_count
     ]);
     STTS = STCO;
     VMHD = new Uint8Array([0x00, // version
-    0x00, 0x00, 0x01, // flags
-    0x00, 0x00, // graphicsmode
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00 // opcolor
+      0x00, 0x00, 0x01, // flags
+      0x00, 0x00, // graphicsmode
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00 // opcolor
     ]);
   })();
 
   box = function box(type) {
     var payload = [],
-        size = 0,
-        i,
-        result,
-        view;
+      size = 0,
+      i,
+      result,
+      view;
 
     for (i = 1; i < arguments.length; i++) {
       payload.push(arguments[i]);
@@ -1256,26 +1257,26 @@
 
   esds = function esds(track) {
     return box(types.esds, new Uint8Array([0x00, // version
-    0x00, 0x00, 0x00, // flags
-    // ES_Descriptor
-    0x03, // tag, ES_DescrTag
-    0x19, // length
-    0x00, 0x00, // ES_ID
-    0x00, // streamDependenceFlag, URL_flag, reserved, streamPriority
-    // DecoderConfigDescriptor
-    0x04, // tag, DecoderConfigDescrTag
-    0x11, // length
-    0x40, // object type
-    0x15, // streamType
-    0x00, 0x06, 0x00, // bufferSizeDB
-    0x00, 0x00, 0xda, 0xc0, // maxBitrate
-    0x00, 0x00, 0xda, 0xc0, // avgBitrate
-    // DecoderSpecificInfo
-    0x05, // tag, DecoderSpecificInfoTag
-    0x02, // length
-    // ISO/IEC 14496-3, AudioSpecificConfig
-    // for samplingFrequencyIndex see ISO/IEC 13818-7:2006, 8.1.3.2.2, Table 35
-    track.audioobjecttype << 3 | track.samplingfrequencyindex >>> 1, track.samplingfrequencyindex << 7 | track.channelcount << 3, 0x06, 0x01, 0x02 // GASpecificConfig
+      0x00, 0x00, 0x00, // flags
+      // ES_Descriptor
+      0x03, // tag, ES_DescrTag
+      0x19, // length
+      0x00, 0x00, // ES_ID
+      0x00, // streamDependenceFlag, URL_flag, reserved, streamPriority
+      // DecoderConfigDescriptor
+      0x04, // tag, DecoderConfigDescrTag
+      0x11, // length
+      0x40, // object type
+      0x15, // streamType
+      0x00, 0x06, 0x00, // bufferSizeDB
+      0x00, 0x00, 0xda, 0xc0, // maxBitrate
+      0x00, 0x00, 0xda, 0xc0, // avgBitrate
+      // DecoderSpecificInfo
+      0x05, // tag, DecoderSpecificInfoTag
+      0x02, // length
+      // ISO/IEC 14496-3, AudioSpecificConfig
+      // for samplingFrequencyIndex see ISO/IEC 13818-7:2006, 8.1.3.2.2, Table 35
+      track.audioobjecttype << 3 | track.samplingfrequencyindex >>> 1, track.samplingfrequencyindex << 7 | track.channelcount << 3, 0x06, 0x01, 0x02 // GASpecificConfig
     ]));
   };
 
@@ -1293,13 +1294,13 @@
 
   mdhd = function mdhd(track) {
     var result = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x02, // creation_time
-    0x00, 0x00, 0x00, 0x03, // modification_time
-    0x00, 0x01, 0x5f, 0x90, // timescale, 90,000 "ticks" per second
-    track.duration >>> 24 & 0xFF, track.duration >>> 16 & 0xFF, track.duration >>> 8 & 0xFF, track.duration & 0xFF, // duration
-    0x55, 0xc4, // 'und' language (undetermined)
-    0x00, 0x00]); // Use the sample rate from the track metadata, when it is
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x02, // creation_time
+      0x00, 0x00, 0x00, 0x03, // modification_time
+      0x00, 0x01, 0x5f, 0x90, // timescale, 90,000 "ticks" per second
+      track.duration >>> 24 & 0xFF, track.duration >>> 16 & 0xFF, track.duration >>> 8 & 0xFF, track.duration & 0xFF, // duration
+      0x55, 0xc4, // 'und' language (undetermined)
+      0x00, 0x00]); // Use the sample rate from the track metadata, when it is
     // defined. The sample rate can be parsed out of an ADTS header, for
     // instance.
 
@@ -1319,7 +1320,7 @@
 
   mfhd = function mfhd(sequenceNumber) {
     return box(types.mfhd, new Uint8Array([0x00, 0x00, 0x00, 0x00, // flags
-    (sequenceNumber & 0xFF000000) >> 24, (sequenceNumber & 0xFF0000) >> 16, (sequenceNumber & 0xFF00) >> 8, sequenceNumber & 0xFF // sequence_number
+      (sequenceNumber & 0xFF000000) >> 24, (sequenceNumber & 0xFF0000) >> 16, (sequenceNumber & 0xFF00) >> 8, sequenceNumber & 0xFF // sequence_number
     ]));
   };
 
@@ -1329,7 +1330,7 @@
 
   moof = function moof(sequenceNumber, tracks) {
     var trackFragments = [],
-        i = tracks.length; // build traf boxes for each track fragment
+      i = tracks.length; // build traf boxes for each track fragment
 
     while (i--) {
       trackFragments[i] = traf(tracks[i]);
@@ -1346,7 +1347,7 @@
 
   moov = function moov(tracks) {
     var i = tracks.length,
-        boxes = [];
+      boxes = [];
 
     while (i--) {
       boxes[i] = trak(tracks[i]);
@@ -1357,7 +1358,7 @@
 
   mvex = function mvex(tracks) {
     var i = tracks.length,
-        boxes = [];
+      boxes = [];
 
     while (i--) {
       boxes[i] = trex(tracks[i]);
@@ -1368,28 +1369,28 @@
 
   mvhd = function mvhd(duration) {
     var bytes = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    0x00, 0x00, 0x00, 0x01, // creation_time
-    0x00, 0x00, 0x00, 0x02, // modification_time
-    0x00, 0x01, 0x5f, 0x90, // timescale, 90,000 "ticks" per second
-    (duration & 0xFF000000) >> 24, (duration & 0xFF0000) >> 16, (duration & 0xFF00) >> 8, duration & 0xFF, // duration
-    0x00, 0x01, 0x00, 0x00, // 1.0 rate
-    0x01, 0x00, // 1.0 volume
-    0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, // transformation: unity matrix
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // pre_defined
-    0xff, 0xff, 0xff, 0xff // next_track_ID
+      0x00, 0x00, 0x00, // flags
+      0x00, 0x00, 0x00, 0x01, // creation_time
+      0x00, 0x00, 0x00, 0x02, // modification_time
+      0x00, 0x01, 0x5f, 0x90, // timescale, 90,000 "ticks" per second
+      (duration & 0xFF000000) >> 24, (duration & 0xFF0000) >> 16, (duration & 0xFF00) >> 8, duration & 0xFF, // duration
+      0x00, 0x01, 0x00, 0x00, // 1.0 rate
+      0x01, 0x00, // 1.0 volume
+      0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, // transformation: unity matrix
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // pre_defined
+      0xff, 0xff, 0xff, 0xff // next_track_ID
     ]);
     return box(types.mvhd, bytes);
   };
 
   sdtp = function sdtp(track) {
     var samples = track.samples || [],
-        bytes = new Uint8Array(4 + samples.length),
-        flags,
-        i; // leave the full box header (4 bytes) all zero
+      bytes = new Uint8Array(4 + samples.length),
+      flags,
+      i; // leave the full box header (4 bytes) all zero
     // write the sample table
 
     for (i = 0; i < samples.length; i++) {
@@ -1409,17 +1410,17 @@
 
     stsd = function stsd(track) {
       return box(types.stsd, new Uint8Array([0x00, // version 0
-      0x00, 0x00, 0x00, // flags
-      0x00, 0x00, 0x00, 0x01]), track.type === 'video' ? videoSample(track) : audioSample(track));
+        0x00, 0x00, 0x00, // flags
+        0x00, 0x00, 0x00, 0x01]), track.type === 'video' ? videoSample(track) : audioSample(track));
     };
 
     videoSample = function videoSample(track) {
       var sps = track.sps || [],
-          pps = track.pps || [],
-          sequenceParameterSets = [],
-          pictureParameterSets = [],
-          i,
-          avc1Box; // assemble the SPSs
+        pps = track.pps || [],
+        sequenceParameterSets = [],
+        pictureParameterSets = [],
+        i,
+        avc1Box; // assemble the SPSs
 
       for (i = 0; i < sps.length; i++) {
         sequenceParameterSets.push((sps[i].byteLength & 0xFF00) >>> 8);
@@ -1436,36 +1437,36 @@
       }
 
       avc1Box = [types.avc1, new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // reserved
-      0x00, 0x01, // data_reference_index
-      0x00, 0x00, // pre_defined
-      0x00, 0x00, // reserved
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // pre_defined
-      (track.width & 0xff00) >> 8, track.width & 0xff, // width
-      (track.height & 0xff00) >> 8, track.height & 0xff, // height
-      0x00, 0x48, 0x00, 0x00, // horizresolution
-      0x00, 0x48, 0x00, 0x00, // vertresolution
-      0x00, 0x00, 0x00, 0x00, // reserved
-      0x00, 0x01, // frame_count
-      0x13, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x6a, 0x73, 0x2d, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x69, 0x62, 0x2d, 0x68, 0x6c, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // compressorname
-      0x00, 0x18, // depth = 24
-      0x11, 0x11 // pre_defined = -1
+        0x00, 0x01, // data_reference_index
+        0x00, 0x00, // pre_defined
+        0x00, 0x00, // reserved
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // pre_defined
+        (track.width & 0xff00) >> 8, track.width & 0xff, // width
+        (track.height & 0xff00) >> 8, track.height & 0xff, // height
+        0x00, 0x48, 0x00, 0x00, // horizresolution
+        0x00, 0x48, 0x00, 0x00, // vertresolution
+        0x00, 0x00, 0x00, 0x00, // reserved
+        0x00, 0x01, // frame_count
+        0x13, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x6a, 0x73, 0x2d, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x69, 0x62, 0x2d, 0x68, 0x6c, 0x73, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // compressorname
+        0x00, 0x18, // depth = 24
+        0x11, 0x11 // pre_defined = -1
       ]), box(types.avcC, new Uint8Array([0x01, // configurationVersion
-      track.profileIdc, // AVCProfileIndication
-      track.profileCompatibility, // profile_compatibility
-      track.levelIdc, // AVCLevelIndication
-      0xff // lengthSizeMinusOne, hard-coded to 4 bytes
+        track.profileIdc, // AVCProfileIndication
+        track.profileCompatibility, // profile_compatibility
+        track.levelIdc, // AVCLevelIndication
+        0xff // lengthSizeMinusOne, hard-coded to 4 bytes
       ].concat([sps.length], // numOfSequenceParameterSets
-      sequenceParameterSets, // "SPS"
-      [pps.length], // numOfPictureParameterSets
-      pictureParameterSets // "PPS"
+        sequenceParameterSets, // "SPS"
+        [pps.length], // numOfPictureParameterSets
+        pictureParameterSets // "PPS"
       ))), box(types.btrt, new Uint8Array([0x00, 0x1c, 0x9c, 0x80, // bufferSizeDB
-      0x00, 0x2d, 0xc6, 0xc0, // maxBitrate
-      0x00, 0x2d, 0xc6, 0xc0 // avgBitrate
+        0x00, 0x2d, 0xc6, 0xc0, // maxBitrate
+        0x00, 0x2d, 0xc6, 0xc0 // avgBitrate
       ]))];
 
       if (track.sarRatio) {
         var hSpacing = track.sarRatio[0],
-            vSpacing = track.sarRatio[1];
+          vSpacing = track.sarRatio[1];
         avc1Box.push(box(types.pasp, new Uint8Array([(hSpacing & 0xFF000000) >> 24, (hSpacing & 0xFF0000) >> 16, (hSpacing & 0xFF00) >> 8, hSpacing & 0xFF, (vSpacing & 0xFF000000) >> 24, (vSpacing & 0xFF0000) >> 16, (vSpacing & 0xFF00) >> 8, vSpacing & 0xFF])));
       }
 
@@ -1474,37 +1475,37 @@
 
     audioSample = function audioSample(track) {
       return box(types.mp4a, new Uint8Array([// SampleEntry, ISO/IEC 14496-12
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // reserved
-      0x00, 0x01, // data_reference_index
-      // AudioSampleEntry, ISO/IEC 14496-12
-      0x00, 0x00, 0x00, 0x00, // reserved
-      0x00, 0x00, 0x00, 0x00, // reserved
-      (track.channelcount & 0xff00) >> 8, track.channelcount & 0xff, // channelcount
-      (track.samplesize & 0xff00) >> 8, track.samplesize & 0xff, // samplesize
-      0x00, 0x00, // pre_defined
-      0x00, 0x00, // reserved
-      (track.samplerate & 0xff00) >> 8, track.samplerate & 0xff, 0x00, 0x00 // samplerate, 16.16
-      // MP4AudioSampleEntry, ISO/IEC 14496-14
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // reserved
+        0x00, 0x01, // data_reference_index
+        // AudioSampleEntry, ISO/IEC 14496-12
+        0x00, 0x00, 0x00, 0x00, // reserved
+        0x00, 0x00, 0x00, 0x00, // reserved
+        (track.channelcount & 0xff00) >> 8, track.channelcount & 0xff, // channelcount
+        (track.samplesize & 0xff00) >> 8, track.samplesize & 0xff, // samplesize
+        0x00, 0x00, // pre_defined
+        0x00, 0x00, // reserved
+        (track.samplerate & 0xff00) >> 8, track.samplerate & 0xff, 0x00, 0x00 // samplerate, 16.16
+        // MP4AudioSampleEntry, ISO/IEC 14496-14
       ]), esds(track));
     };
   })();
 
   tkhd = function tkhd(track) {
     var result = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x07, // flags
-    0x00, 0x00, 0x00, 0x00, // creation_time
-    0x00, 0x00, 0x00, 0x00, // modification_time
-    (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
-    0x00, 0x00, 0x00, 0x00, // reserved
-    (track.duration & 0xFF000000) >> 24, (track.duration & 0xFF0000) >> 16, (track.duration & 0xFF00) >> 8, track.duration & 0xFF, // duration
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // reserved
-    0x00, 0x00, // layer
-    0x00, 0x00, // alternate_group
-    0x01, 0x00, // non-audio track volume
-    0x00, 0x00, // reserved
-    0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, // transformation: unity matrix
-    (track.width & 0xFF00) >> 8, track.width & 0xFF, 0x00, 0x00, // width
-    (track.height & 0xFF00) >> 8, track.height & 0xFF, 0x00, 0x00 // height
+      0x00, 0x00, 0x07, // flags
+      0x00, 0x00, 0x00, 0x00, // creation_time
+      0x00, 0x00, 0x00, 0x00, // modification_time
+      (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
+      0x00, 0x00, 0x00, 0x00, // reserved
+      (track.duration & 0xFF000000) >> 24, (track.duration & 0xFF0000) >> 16, (track.duration & 0xFF00) >> 8, track.duration & 0xFF, // duration
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // reserved
+      0x00, 0x00, // layer
+      0x00, 0x00, // alternate_group
+      0x01, 0x00, // non-audio track volume
+      0x00, 0x00, // reserved
+      0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, // transformation: unity matrix
+      (track.width & 0xFF00) >> 8, track.width & 0xFF, 0x00, 0x00, // width
+      (track.height & 0xFF00) >> 8, track.height & 0xFF, 0x00, 0x00 // height
     ]);
     return box(types.tkhd, result);
   };
@@ -1517,28 +1518,28 @@
   traf = function traf(track) {
     var trackFragmentHeader, trackFragmentDecodeTime, trackFragmentRun, sampleDependencyTable, dataOffset, upperWordBaseMediaDecodeTime, lowerWordBaseMediaDecodeTime;
     trackFragmentHeader = box(types.tfhd, new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x3a, // flags
-    (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
-    0x00, 0x00, 0x00, 0x01, // sample_description_index
-    0x00, 0x00, 0x00, 0x00, // default_sample_duration
-    0x00, 0x00, 0x00, 0x00, // default_sample_size
-    0x00, 0x00, 0x00, 0x00 // default_sample_flags
+      0x00, 0x00, 0x3a, // flags
+      (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
+      0x00, 0x00, 0x00, 0x01, // sample_description_index
+      0x00, 0x00, 0x00, 0x00, // default_sample_duration
+      0x00, 0x00, 0x00, 0x00, // default_sample_size
+      0x00, 0x00, 0x00, 0x00 // default_sample_flags
     ]));
     upperWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime / MAX_UINT32);
     lowerWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime % MAX_UINT32);
     trackFragmentDecodeTime = box(types.tfdt, new Uint8Array([0x01, // version 1
-    0x00, 0x00, 0x00, // flags
-    // baseMediaDecodeTime
-    upperWordBaseMediaDecodeTime >>> 24 & 0xFF, upperWordBaseMediaDecodeTime >>> 16 & 0xFF, upperWordBaseMediaDecodeTime >>> 8 & 0xFF, upperWordBaseMediaDecodeTime & 0xFF, lowerWordBaseMediaDecodeTime >>> 24 & 0xFF, lowerWordBaseMediaDecodeTime >>> 16 & 0xFF, lowerWordBaseMediaDecodeTime >>> 8 & 0xFF, lowerWordBaseMediaDecodeTime & 0xFF])); // the data offset specifies the number of bytes from the start of
+      0x00, 0x00, 0x00, // flags
+      // baseMediaDecodeTime
+      upperWordBaseMediaDecodeTime >>> 24 & 0xFF, upperWordBaseMediaDecodeTime >>> 16 & 0xFF, upperWordBaseMediaDecodeTime >>> 8 & 0xFF, upperWordBaseMediaDecodeTime & 0xFF, lowerWordBaseMediaDecodeTime >>> 24 & 0xFF, lowerWordBaseMediaDecodeTime >>> 16 & 0xFF, lowerWordBaseMediaDecodeTime >>> 8 & 0xFF, lowerWordBaseMediaDecodeTime & 0xFF])); // the data offset specifies the number of bytes from the start of
     // the containing moof to the first payload byte of the associated
     // mdat
 
     dataOffset = 32 + // tfhd
-    20 + // tfdt
-    8 + // traf header
-    16 + // mfhd
-    8 + // moof header
-    8; // mdat header
+      20 + // tfdt
+      8 + // traf header
+      16 + // mfhd
+      8 + // moof header
+      8; // mdat header
     // audio tracks require less metadata
 
     if (track.type === 'audio') {
@@ -1567,12 +1568,12 @@
 
   trex = function trex(track) {
     var result = new Uint8Array([0x00, // version 0
-    0x00, 0x00, 0x00, // flags
-    (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
-    0x00, 0x00, 0x00, 0x01, // default_sample_description_index
-    0x00, 0x00, 0x00, 0x00, // default_sample_duration
-    0x00, 0x00, 0x00, 0x00, // default_sample_size
-    0x00, 0x01, 0x00, 0x01 // default_sample_flags
+      0x00, 0x00, 0x00, // flags
+      (track.id & 0xFF000000) >> 24, (track.id & 0xFF0000) >> 16, (track.id & 0xFF00) >> 8, track.id & 0xFF, // track_ID
+      0x00, 0x00, 0x00, 0x01, // default_sample_description_index
+      0x00, 0x00, 0x00, 0x00, // default_sample_duration
+      0x00, 0x00, 0x00, 0x00, // default_sample_size
+      0x00, 0x01, 0x00, 0x01 // default_sample_flags
     ]); // the last two bytes of default_sample_flags is the sample
     // degradation priority, a hint about the importance of this sample
     // relative to others. Lower the degradation priority for all sample
@@ -1593,9 +1594,9 @@
 
     trunHeader = function trunHeader(samples, offset) {
       var durationPresent = 0,
-          sizePresent = 0,
-          flagsPresent = 0,
-          compositionTimeOffset = 0; // trun flag constants
+        sizePresent = 0,
+        flagsPresent = 0,
+        compositionTimeOffset = 0; // trun flag constants
 
       if (samples.length) {
         if (samples[0].duration !== undefined) {
@@ -1616,9 +1617,9 @@
       }
 
       return [0x00, // version 0
-      0x00, durationPresent | sizePresent | flagsPresent | compositionTimeOffset, 0x01, // flags
-      (samples.length & 0xFF000000) >>> 24, (samples.length & 0xFF0000) >>> 16, (samples.length & 0xFF00) >>> 8, samples.length & 0xFF, // sample_count
-      (offset & 0xFF000000) >>> 24, (offset & 0xFF0000) >>> 16, (offset & 0xFF00) >>> 8, offset & 0xFF // data_offset
+        0x00, durationPresent | sizePresent | flagsPresent | compositionTimeOffset, 0x01, // flags
+        (samples.length & 0xFF000000) >>> 24, (samples.length & 0xFF0000) >>> 16, (samples.length & 0xFF00) >>> 8, samples.length & 0xFF, // sample_count
+        (offset & 0xFF000000) >>> 24, (offset & 0xFF0000) >>> 16, (offset & 0xFF00) >>> 8, offset & 0xFF // data_offset
       ];
     };
 
@@ -1698,8 +1699,8 @@
     moov: moov,
     initSegment: function initSegment(tracks) {
       var fileType = ftyp(),
-          movie = moov(tracks),
-          result;
+        movie = moov(tracks),
+        result;
       result = new Uint8Array(fileType.byteLength + movie.byteLength);
       result.set(fileType);
       result.set(movie, fileType.byteLength);
@@ -1741,11 +1742,11 @@
 
   var findBox = function findBox(data, path) {
     var results = [],
-        i,
-        size,
-        type,
-        end,
-        subresults;
+      i,
+      size,
+      type,
+      end,
+      subresults;
 
     if (!path.length) {
       // short-circuit the search for empty paths
@@ -1910,19 +1911,19 @@
 
   var tfhd = function tfhd(data) {
     var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-        result = {
-      version: data[0],
-      flags: new Uint8Array(data.subarray(1, 4)),
-      trackId: view.getUint32(4)
-    },
-        baseDataOffsetPresent = result.flags[2] & 0x01,
-        sampleDescriptionIndexPresent = result.flags[2] & 0x02,
-        defaultSampleDurationPresent = result.flags[2] & 0x08,
-        defaultSampleSizePresent = result.flags[2] & 0x10,
-        defaultSampleFlagsPresent = result.flags[2] & 0x20,
-        durationIsEmpty = result.flags[0] & 0x010000,
-        defaultBaseIsMoof = result.flags[0] & 0x020000,
-        i;
+      result = {
+        version: data[0],
+        flags: new Uint8Array(data.subarray(1, 4)),
+        trackId: view.getUint32(4)
+      },
+      baseDataOffsetPresent = result.flags[2] & 0x01,
+      sampleDescriptionIndexPresent = result.flags[2] & 0x02,
+      defaultSampleDurationPresent = result.flags[2] & 0x08,
+      defaultSampleSizePresent = result.flags[2] & 0x10,
+      defaultSampleFlagsPresent = result.flags[2] & 0x20,
+      durationIsEmpty = result.flags[0] & 0x010000,
+      defaultBaseIsMoof = result.flags[0] & 0x020000,
+      i;
     i = 8;
 
     if (baseDataOffsetPresent) {
@@ -1985,23 +1986,23 @@
       flags: new Uint8Array(data.subarray(1, 4)),
       samples: []
     },
-        view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-        // Flag interpretation
-    dataOffsetPresent = result.flags[2] & 0x01,
-        // compare with 2nd byte of 0x1
-    firstSampleFlagsPresent = result.flags[2] & 0x04,
-        // compare with 2nd byte of 0x4
-    sampleDurationPresent = result.flags[1] & 0x01,
-        // compare with 2nd byte of 0x100
-    sampleSizePresent = result.flags[1] & 0x02,
-        // compare with 2nd byte of 0x200
-    sampleFlagsPresent = result.flags[1] & 0x04,
-        // compare with 2nd byte of 0x400
-    sampleCompositionTimeOffsetPresent = result.flags[1] & 0x08,
-        // compare with 2nd byte of 0x800
-    sampleCount = view.getUint32(4),
-        offset = 8,
-        sample;
+      view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+      // Flag interpretation
+      dataOffsetPresent = result.flags[2] & 0x01,
+      // compare with 2nd byte of 0x1
+      firstSampleFlagsPresent = result.flags[2] & 0x04,
+      // compare with 2nd byte of 0x4
+      sampleDurationPresent = result.flags[1] & 0x01,
+      // compare with 2nd byte of 0x100
+      sampleSizePresent = result.flags[1] & 0x02,
+      // compare with 2nd byte of 0x200
+      sampleFlagsPresent = result.flags[1] & 0x04,
+      // compare with 2nd byte of 0x400
+      sampleCompositionTimeOffsetPresent = result.flags[1] & 0x08,
+      // compare with 2nd byte of 0x800
+      sampleCount = view.getUint32(4),
+      offset = 8,
+      sample;
 
     if (dataOffsetPresent) {
       // 32 bit signed integer
@@ -2120,170 +2121,170 @@
   };
 
   var typedArrayIndexOf = typedArray.typedArrayIndexOf,
-      // Frames that allow different types of text encoding contain a text
-  // encoding description byte [ID3v2.4.0 section 4.]
-  textEncodingDescriptionByte = {
-    Iso88591: 0x00,
-    // ISO-8859-1, terminated with \0.
-    Utf16: 0x01,
-    // UTF-16 encoded Unicode BOM, terminated with \0\0
-    Utf16be: 0x02,
-    // UTF-16BE encoded Unicode, without BOM, terminated with \0\0
-    Utf8: 0x03 // UTF-8 encoded Unicode, terminated with \0
+    // Frames that allow different types of text encoding contain a text
+    // encoding description byte [ID3v2.4.0 section 4.]
+    textEncodingDescriptionByte = {
+      Iso88591: 0x00,
+      // ISO-8859-1, terminated with \0.
+      Utf16: 0x01,
+      // UTF-16 encoded Unicode BOM, terminated with \0\0
+      Utf16be: 0x02,
+      // UTF-16BE encoded Unicode, without BOM, terminated with \0\0
+      Utf8: 0x03 // UTF-8 encoded Unicode, terminated with \0
 
-  },
-      // return a percent-encoded representation of the specified byte range
-  // @see http://en.wikipedia.org/wiki/Percent-encoding 
-  percentEncode$1 = function percentEncode(bytes, start, end) {
-    var i,
+    },
+    // return a percent-encoded representation of the specified byte range
+    // @see http://en.wikipedia.org/wiki/Percent-encoding 
+    percentEncode$1 = function percentEncode(bytes, start, end) {
+      var i,
         result = '';
 
-    for (i = start; i < end; i++) {
-      result += '%' + ('00' + bytes[i].toString(16)).slice(-2);
-    }
+      for (i = start; i < end; i++) {
+        result += '%' + ('00' + bytes[i].toString(16)).slice(-2);
+      }
 
-    return result;
-  },
-      // return the string representation of the specified byte range,
-  // interpreted as UTf-8.
-  parseUtf8 = function parseUtf8(bytes, start, end) {
-    return decodeURIComponent(percentEncode$1(bytes, start, end));
-  },
-      // return the string representation of the specified byte range,
-  // interpreted as ISO-8859-1.
-  parseIso88591$1 = function parseIso88591(bytes, start, end) {
-    return unescape(percentEncode$1(bytes, start, end)); // jshint ignore:line
-  },
-      parseSyncSafeInteger$1 = function parseSyncSafeInteger(data) {
-    return data[0] << 21 | data[1] << 14 | data[2] << 7 | data[3];
-  },
-      frameParsers = {
-    'APIC': function APIC(frame) {
-      var i = 1,
+      return result;
+    },
+    // return the string representation of the specified byte range,
+    // interpreted as UTf-8.
+    parseUtf8 = function parseUtf8(bytes, start, end) {
+      return decodeURIComponent(percentEncode$1(bytes, start, end));
+    },
+    // return the string representation of the specified byte range,
+    // interpreted as ISO-8859-1.
+    parseIso88591$1 = function parseIso88591(bytes, start, end) {
+      return unescape(percentEncode$1(bytes, start, end)); // jshint ignore:line
+    },
+    parseSyncSafeInteger$1 = function parseSyncSafeInteger(data) {
+      return data[0] << 21 | data[1] << 14 | data[2] << 7 | data[3];
+    },
+    frameParsers = {
+      'APIC': function APIC(frame) {
+        var i = 1,
           mimeTypeEndIndex,
           descriptionEndIndex,
           LINK_MIME_TYPE = '-->';
 
-      if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
-        // ignore frames with unrecognized character encodings
-        return;
-      } // parsing fields [ID3v2.4.0 section 4.14.]
+        if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
+          // ignore frames with unrecognized character encodings
+          return;
+        } // parsing fields [ID3v2.4.0 section 4.14.]
 
 
-      mimeTypeEndIndex = typedArrayIndexOf(frame.data, 0, i);
+        mimeTypeEndIndex = typedArrayIndexOf(frame.data, 0, i);
 
-      if (mimeTypeEndIndex < 0) {
-        // malformed frame
-        return;
-      } // parsing Mime type field (terminated with \0)
-
-
-      frame.mimeType = parseIso88591$1(frame.data, i, mimeTypeEndIndex);
-      i = mimeTypeEndIndex + 1; // parsing 1-byte Picture Type field
-
-      frame.pictureType = frame.data[i];
-      i++;
-      descriptionEndIndex = typedArrayIndexOf(frame.data, 0, i);
-
-      if (descriptionEndIndex < 0) {
-        // malformed frame
-        return;
-      } // parsing Description field (terminated with \0)
+        if (mimeTypeEndIndex < 0) {
+          // malformed frame
+          return;
+        } // parsing Mime type field (terminated with \0)
 
 
-      frame.description = parseUtf8(frame.data, i, descriptionEndIndex);
-      i = descriptionEndIndex + 1;
+        frame.mimeType = parseIso88591$1(frame.data, i, mimeTypeEndIndex);
+        i = mimeTypeEndIndex + 1; // parsing 1-byte Picture Type field
 
-      if (frame.mimeType === LINK_MIME_TYPE) {
-        // parsing Picture Data field as URL (always represented as ISO-8859-1 [ID3v2.4.0 section 4.])
-        frame.url = parseIso88591$1(frame.data, i, frame.data.length);
-      } else {
-        // parsing Picture Data field as binary data
-        frame.pictureData = frame.data.subarray(i, frame.data.length);
-      }
-    },
-    'T*': function T(frame) {
-      if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
-        // ignore frames with unrecognized character encodings
-        return;
-      } // parse text field, do not include null terminator in the frame value
-      // frames that allow different types of encoding contain terminated text [ID3v2.4.0 section 4.]
+        frame.pictureType = frame.data[i];
+        i++;
+        descriptionEndIndex = typedArrayIndexOf(frame.data, 0, i);
+
+        if (descriptionEndIndex < 0) {
+          // malformed frame
+          return;
+        } // parsing Description field (terminated with \0)
 
 
-      frame.value = parseUtf8(frame.data, 1, frame.data.length).replace(/\0*$/, ''); // text information frames supports multiple strings, stored as a terminator separated list [ID3v2.4.0 section 4.2.]
+        frame.description = parseUtf8(frame.data, i, descriptionEndIndex);
+        i = descriptionEndIndex + 1;
 
-      frame.values = frame.value.split('\0');
-    },
-    'TXXX': function TXXX(frame) {
-      var descriptionEndIndex;
-
-      if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
-        // ignore frames with unrecognized character encodings
-        return;
-      }
-
-      descriptionEndIndex = typedArrayIndexOf(frame.data, 0, 1);
-
-      if (descriptionEndIndex === -1) {
-        return;
-      } // parse the text fields
-
-
-      frame.description = parseUtf8(frame.data, 1, descriptionEndIndex); // do not include the null terminator in the tag value
-      // frames that allow different types of encoding contain terminated text
-      // [ID3v2.4.0 section 4.]
-
-      frame.value = parseUtf8(frame.data, descriptionEndIndex + 1, frame.data.length).replace(/\0*$/, '');
-      frame.data = frame.value;
-    },
-    'W*': function W(frame) {
-      // parse URL field; URL fields are always represented as ISO-8859-1 [ID3v2.4.0 section 4.]
-      // if the value is followed by a string termination all the following information should be ignored [ID3v2.4.0 section 4.3]
-      frame.url = parseIso88591$1(frame.data, 0, frame.data.length).replace(/\0.*$/, '');
-    },
-    'WXXX': function WXXX(frame) {
-      var descriptionEndIndex;
-
-      if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
-        // ignore frames with unrecognized character encodings
-        return;
-      }
-
-      descriptionEndIndex = typedArrayIndexOf(frame.data, 0, 1);
-
-      if (descriptionEndIndex === -1) {
-        return;
-      } // parse the description and URL fields
-
-
-      frame.description = parseUtf8(frame.data, 1, descriptionEndIndex); // URL fields are always represented as ISO-8859-1 [ID3v2.4.0 section 4.]
-      // if the value is followed by a string termination all the following information
-      // should be ignored [ID3v2.4.0 section 4.3]
-
-      frame.url = parseIso88591$1(frame.data, descriptionEndIndex + 1, frame.data.length).replace(/\0.*$/, '');
-    },
-    'PRIV': function PRIV(frame) {
-      var i;
-
-      for (i = 0; i < frame.data.length; i++) {
-        if (frame.data[i] === 0) {
-          // parse the description and URL fields
-          frame.owner = parseIso88591$1(frame.data, 0, i);
-          break;
+        if (frame.mimeType === LINK_MIME_TYPE) {
+          // parsing Picture Data field as URL (always represented as ISO-8859-1 [ID3v2.4.0 section 4.])
+          frame.url = parseIso88591$1(frame.data, i, frame.data.length);
+        } else {
+          // parsing Picture Data field as binary data
+          frame.pictureData = frame.data.subarray(i, frame.data.length);
         }
-      }
+      },
+      'T*': function T(frame) {
+        if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
+          // ignore frames with unrecognized character encodings
+          return;
+        } // parse text field, do not include null terminator in the frame value
+        // frames that allow different types of encoding contain terminated text [ID3v2.4.0 section 4.]
 
-      frame.privateData = frame.data.subarray(i + 1);
-      frame.data = frame.privateData;
-    }
-  };
+
+        frame.value = parseUtf8(frame.data, 1, frame.data.length).replace(/\0*$/, ''); // text information frames supports multiple strings, stored as a terminator separated list [ID3v2.4.0 section 4.2.]
+
+        frame.values = frame.value.split('\0');
+      },
+      'TXXX': function TXXX(frame) {
+        var descriptionEndIndex;
+
+        if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
+          // ignore frames with unrecognized character encodings
+          return;
+        }
+
+        descriptionEndIndex = typedArrayIndexOf(frame.data, 0, 1);
+
+        if (descriptionEndIndex === -1) {
+          return;
+        } // parse the text fields
+
+
+        frame.description = parseUtf8(frame.data, 1, descriptionEndIndex); // do not include the null terminator in the tag value
+        // frames that allow different types of encoding contain terminated text
+        // [ID3v2.4.0 section 4.]
+
+        frame.value = parseUtf8(frame.data, descriptionEndIndex + 1, frame.data.length).replace(/\0*$/, '');
+        frame.data = frame.value;
+      },
+      'W*': function W(frame) {
+        // parse URL field; URL fields are always represented as ISO-8859-1 [ID3v2.4.0 section 4.]
+        // if the value is followed by a string termination all the following information should be ignored [ID3v2.4.0 section 4.3]
+        frame.url = parseIso88591$1(frame.data, 0, frame.data.length).replace(/\0.*$/, '');
+      },
+      'WXXX': function WXXX(frame) {
+        var descriptionEndIndex;
+
+        if (frame.data[0] !== textEncodingDescriptionByte.Utf8) {
+          // ignore frames with unrecognized character encodings
+          return;
+        }
+
+        descriptionEndIndex = typedArrayIndexOf(frame.data, 0, 1);
+
+        if (descriptionEndIndex === -1) {
+          return;
+        } // parse the description and URL fields
+
+
+        frame.description = parseUtf8(frame.data, 1, descriptionEndIndex); // URL fields are always represented as ISO-8859-1 [ID3v2.4.0 section 4.]
+        // if the value is followed by a string termination all the following information
+        // should be ignored [ID3v2.4.0 section 4.3]
+
+        frame.url = parseIso88591$1(frame.data, descriptionEndIndex + 1, frame.data.length).replace(/\0.*$/, '');
+      },
+      'PRIV': function PRIV(frame) {
+        var i;
+
+        for (i = 0; i < frame.data.length; i++) {
+          if (frame.data[i] === 0) {
+            // parse the description and URL fields
+            frame.owner = parseIso88591$1(frame.data, 0, i);
+            break;
+          }
+        }
+
+        frame.privateData = frame.data.subarray(i + 1);
+        frame.data = frame.privateData;
+      }
+    };
 
   var parseId3Frames$1 = function parseId3Frames(data) {
     var frameSize,
-        frameHeader,
-        frameStart = 10,
-        tagSize = 0,
-        frames = []; // If we don't have enough data for a header, 10 bytes, 
+      frameHeader,
+      frameStart = 10,
+      tagSize = 0,
+      frames = []; // If we don't have enough data for a header, 10 bytes, 
     // or 'ID3' in the first 3 bytes this is not a valid ID3 tag.
 
     if (data.length < 10 || data[0] !== 'I'.charCodeAt(0) || data[1] !== 'D'.charCodeAt(0) || data[2] !== '3'.charCodeAt(0)) {
@@ -2378,7 +2379,7 @@
 
   timescale = function timescale(init) {
     var result = {},
-        traks = findBox_1(init, ['moov', 'trak']); // mdhd timescale
+      traks = findBox_1(init, ['moov', 'trak']); // mdhd timescale
 
     return traks.reduce(function (result, trak) {
       var tkhd, version, index, id, mdhd;
@@ -2729,9 +2730,9 @@
   // as the frame duration, starting pts, etc.
   var groupNalsIntoFrames = function groupNalsIntoFrames(nalUnits) {
     var i,
-        currentNal,
-        currentFrame = [],
-        frames = []; // TODO added for LHLS, make sure this is OK
+      currentNal,
+      currentFrame = [],
+      frames = []; // TODO added for LHLS, make sure this is OK
 
     frames.byteLength = 0;
     frames.nalCount = 0;
@@ -2790,9 +2791,9 @@
 
   var groupFramesIntoGops = function groupFramesIntoGops(frames) {
     var i,
-        currentFrame,
-        currentGop = [],
-        gops = []; // We must pre-set some of the values on the Gop since we
+      currentFrame,
+      currentGop = [],
+      gops = []; // We must pre-set some of the values on the Gop since we
     // keep running totals of these values
 
     currentGop.byteLength = 0;
@@ -2923,12 +2924,12 @@
 
   var generateSampleTable$1 = function generateSampleTable(gops, baseDataOffset) {
     var h,
-        i,
-        sample,
-        currentGop,
-        currentFrame,
-        dataOffset = baseDataOffset || 0,
-        samples = [];
+      i,
+      sample,
+      currentGop,
+      currentFrame,
+      dataOffset = baseDataOffset || 0,
+      samples = [];
 
     for (h = 0; h < gops.length; h++) {
       currentGop = gops[h];
@@ -2947,17 +2948,17 @@
 
   var concatenateNalData = function concatenateNalData(gops) {
     var h,
-        i,
-        j,
-        currentGop,
-        currentFrame,
-        currentNal,
-        dataOffset = 0,
-        nalsByteLength = gops.byteLength,
-        numberOfNals = gops.nalCount,
-        totalByteLength = nalsByteLength + 4 * numberOfNals,
-        data = new Uint8Array(totalByteLength),
-        view = new DataView(data.buffer); // For each Gop..
+      i,
+      j,
+      currentGop,
+      currentFrame,
+      currentNal,
+      dataOffset = 0,
+      nalsByteLength = gops.byteLength,
+      numberOfNals = gops.nalCount,
+      totalByteLength = nalsByteLength + 4 * numberOfNals,
+      data = new Uint8Array(totalByteLength),
+      view = new DataView(data.buffer); // For each Gop..
 
     for (h = 0; h < gops.length; h++) {
       currentGop = gops[h]; // For each Frame..
@@ -2981,8 +2982,8 @@
 
   var generateSampleTableForFrame = function generateSampleTableForFrame(frame, baseDataOffset) {
     var sample,
-        dataOffset = baseDataOffset || 0,
-        samples = [];
+      dataOffset = baseDataOffset || 0,
+      samples = [];
     sample = sampleForFrame(frame, dataOffset);
     samples.push(sample);
     return samples;
@@ -2991,13 +2992,13 @@
 
   var concatenateNalDataForFrame = function concatenateNalDataForFrame(frame) {
     var i,
-        currentNal,
-        dataOffset = 0,
-        nalsByteLength = frame.byteLength,
-        numberOfNals = frame.length,
-        totalByteLength = nalsByteLength + 4 * numberOfNals,
-        data = new Uint8Array(totalByteLength),
-        view = new DataView(data.buffer); // For each NAL..
+      currentNal,
+      dataOffset = 0,
+      nalsByteLength = frame.byteLength,
+      numberOfNals = frame.length,
+      totalByteLength = nalsByteLength + 4 * numberOfNals,
+      data = new Uint8Array(totalByteLength),
+      view = new DataView(data.buffer); // For each NAL..
 
     for (i = 0; i < frame.length; i++) {
       currentNal = frame[i];
@@ -3085,8 +3086,8 @@
 
   var sumFrameByteLengths = function sumFrameByteLengths(array) {
     var i,
-        currentObj,
-        sum = 0; // sum the byteLength's all each nal unit in the frame
+      currentObj,
+      sum = 0; // sum the byteLength's all each nal unit in the frame
 
     for (i = 0; i < array.length; i++) {
       currentObj = array[i];
@@ -3100,13 +3101,13 @@
 
   var prefixWithSilence = function prefixWithSilence(track, frames, audioAppendStartTs, videoBaseMediaDecodeTime) {
     var baseMediaDecodeTimeTs,
-        frameDuration = 0,
-        audioGapDuration = 0,
-        audioFillFrameCount = 0,
-        audioFillDuration = 0,
-        silentFrame,
-        i,
-        firstFrame;
+      frameDuration = 0,
+      audioGapDuration = 0,
+      audioFillFrameCount = 0,
+      audioFillDuration = 0,
+      silentFrame,
+      i,
+      firstFrame;
 
     if (!frames.length) {
       return;
@@ -3178,8 +3179,8 @@
 
   var generateSampleTable = function generateSampleTable(frames) {
     var i,
-        currentFrame,
-        samples = [];
+      currentFrame,
+      samples = [];
 
     for (i = 0; i < frames.length; i++) {
       currentFrame = frames[i];
@@ -3196,9 +3197,9 @@
 
   var concatenateFrameData = function concatenateFrameData(frames) {
     var i,
-        currentFrame,
-        dataOffset = 0,
-        data = new Uint8Array(sumFrameByteLengths(frames));
+      currentFrame,
+      dataOffset = 0,
+      data = new Uint8Array(sumFrameByteLengths(frames));
 
     for (i = 0; i < frames.length; i++) {
       currentFrame = frames[i];
@@ -3291,8 +3292,8 @@
 
   var calculateTrackBaseMediaDecodeTime = function calculateTrackBaseMediaDecodeTime(track, keepOriginalTimestamps) {
     var baseMediaDecodeTime,
-        scale,
-        minSegmentDts = track.minSegmentDts; // Optionally adjust the time so the first segment starts at zero.
+      scale,
+      minSegmentDts = track.minSegmentDts; // Optionally adjust the time so the first segment starts at zero.
 
     if (!keepOriginalTimestamps) {
       minSegmentDts -= track.timelineStartInfo.dts;
@@ -3340,7 +3341,7 @@
   // payload type 0x04.
 
   var USER_DATA_REGISTERED_ITU_T_T35 = 4,
-      RBSP_TRAILING_BITS = 128;
+    RBSP_TRAILING_BITS = 128;
   /**
     * Parse a supplemental enhancement information (SEI) NAL unit.
     * Stops parsing once a message of type ITU T T35 has been found.
@@ -3352,12 +3353,12 @@
 
   var parseSei = function parseSei(bytes) {
     var i = 0,
-        result = {
-      payloadType: -1,
-      payloadSize: 0
-    },
-        payloadType = 0,
-        payloadSize = 0; // go through the sei_rbsp parsing each each individual sei_message
+      result = {
+        payloadType: -1,
+        payloadSize: 0
+      },
+      payloadType = 0,
+      payloadSize = 0; // go through the sei_rbsp parsing each each individual sei_message
 
     while (i < bytes.byteLength) {
       // stop once we have hit the end of the sei_rbsp
@@ -3434,10 +3435,10 @@
 
   var parseCaptionPackets = function parseCaptionPackets(pts, userData) {
     var results = [],
-        i,
-        count,
-        offset,
-        data; // if this is just filler, return immediately
+      i,
+      count,
+      offset,
+      data; // if this is just filler, return immediately
 
     if (!(userData[0] & 0x40)) {
       return results;
@@ -3464,10 +3465,10 @@
 
   var discardEmulationPreventionBytes$1 = function discardEmulationPreventionBytes(data) {
     var length = data.byteLength,
-        emulationPreventionBytesPositions = [],
-        i = 1,
-        newLength,
-        newData; // Find all `Emulation Prevention Bytes`
+      emulationPreventionBytesPositions = [],
+      i = 1,
+      newLength,
+      newData; // Find all `Emulation Prevention Bytes`
 
     while (i < length - 2) {
       if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0x03) {
@@ -4122,7 +4123,7 @@
       } else if (b === 0x8d) {
         // DLY: Delay, nothing to do
         i++;
-      } else ;
+      } else;
     }
   };
   /**
@@ -4875,7 +4876,7 @@
 
   var createDisplayBuffer = function createDisplayBuffer() {
     var result = [],
-        i = BOTTOM_ROW + 1;
+      i = BOTTOM_ROW + 1;
 
     while (i--) {
       result.push({
@@ -5560,13 +5561,13 @@
       // program element descriptors"
       descriptor: options && options.descriptor
     },
-        // the total size in bytes of the ID3 tag being parsed
-    tagSize = 0,
-        // tag data that is not complete enough to be parsed
-    buffer = [],
-        // the total number of bytes currently in the buffer
-    bufferSize = 0,
-        i;
+      // the total size in bytes of the ID3 tag being parsed
+      tagSize = 0,
+      // tag data that is not complete enough to be parsed
+      buffer = [],
+      // the total number of bytes currently in the buffer
+      bufferSize = 0,
+      i;
 
     _MetadataStream.prototype.init.call(this); // calculate the text track in-band metadata track dispatch type
     // https://html.spec.whatwg.org/multipage/embedded-content.html#steps-to-expose-a-media-resource-specific-text-track
@@ -5689,7 +5690,7 @@
 
         if (frame.owner === 'com.apple.streaming.transportStreamTimestamp') {
           var d = frame.data,
-              size = (d[3] & 0x01) << 30 | d[4] << 22 | d[5] << 14 | d[6] << 6 | d[7] >>> 2;
+            size = (d[3] & 0x01) << 30 | d[4] << 22 | d[5] << 14 | d[6] << 6 | d[7] >>> 2;
           size *= 4;
           size += d[7] & 0x03;
           frame.timeStamp = size; // in raw AAC, all subsequent data will be timestamped based
@@ -5724,8 +5725,8 @@
 
 
   var MP2T_PACKET_LENGTH$1 = 188,
-      // bytes
-  SYNC_BYTE$1 = 0x47;
+    // bytes
+    SYNC_BYTE$1 = 0x47;
   /**
    * Splits an incoming stream of binary data into MPEG-2 Transport
    * Stream packets.
@@ -5733,7 +5734,7 @@
 
   _TransportPacketStream = function TransportPacketStream() {
     var buffer = new Uint8Array(MP2T_PACKET_LENGTH$1),
-        bytesInBuffer = 0;
+      bytesInBuffer = 0;
 
     _TransportPacketStream.prototype.init.call(this); // Deliver new bytes to the stream.
 
@@ -5744,8 +5745,8 @@
 
     this.push = function (bytes) {
       var startIndex = 0,
-          endIndex = MP2T_PACKET_LENGTH$1,
-          everything; // If there are bytes remaining from the last segment, prepend them to the
+        endIndex = MP2T_PACKET_LENGTH$1,
+        everything; // If there are bytes remaining from the last segment, prepend them to the
       // bytes that were pushed in
 
       if (bytesInBuffer) {
@@ -5921,7 +5922,7 @@
 
     this.push = function (packet) {
       var result = {},
-          offset = 4;
+        offset = 4;
       result.payloadUnitStartIndicator = !!(packet[1] & 0x40); // pid is a 13-bit field starting at the last bit of packet[1]
 
       result.pid = packet[1] & 0x1f;
@@ -5992,117 +5993,117 @@
 
   _ElementaryStream = function ElementaryStream() {
     var self = this,
-        segmentHadPmt = false,
-        // PES packet fragments
-    video = {
-      data: [],
-      size: 0
-    },
-        audio = {
-      data: [],
-      size: 0
-    },
-        timedMetadata = {
-      data: [],
-      size: 0
-    },
-        programMapTable,
-        parsePes = function parsePes(payload, pes) {
-      var ptsDtsFlags;
-      var startPrefix = payload[0] << 16 | payload[1] << 8 | payload[2]; // default to an empty array
-
-      pes.data = new Uint8Array(); // In certain live streams, the start of a TS fragment has ts packets
-      // that are frame data that is continuing from the previous fragment. This
-      // is to check that the pes data is the start of a new pes payload
-
-      if (startPrefix !== 1) {
-        return;
-      } // get the packet length, this will be 0 for video
-
-
-      pes.packetLength = 6 + (payload[4] << 8 | payload[5]); // find out if this packets starts a new keyframe
-
-      pes.dataAlignmentIndicator = (payload[6] & 0x04) !== 0; // PES packets may be annotated with a PTS value, or a PTS value
-      // and a DTS value. Determine what combination of values is
-      // available to work with.
-
-      ptsDtsFlags = payload[7]; // PTS and DTS are normally stored as a 33-bit number.  Javascript
-      // performs all bitwise operations on 32-bit integers but javascript
-      // supports a much greater range (52-bits) of integer using standard
-      // mathematical operations.
-      // We construct a 31-bit value using bitwise operators over the 31
-      // most significant bits and then multiply by 4 (equal to a left-shift
-      // of 2) before we add the final 2 least significant bits of the
-      // timestamp (equal to an OR.)
-
-      if (ptsDtsFlags & 0xC0) {
-        // the PTS and DTS are not written out directly. For information
-        // on how they are encoded, see
-        // http://dvd.sourceforge.net/dvdinfo/pes-hdr.html
-        pes.pts = (payload[9] & 0x0E) << 27 | (payload[10] & 0xFF) << 20 | (payload[11] & 0xFE) << 12 | (payload[12] & 0xFF) << 5 | (payload[13] & 0xFE) >>> 3;
-        pes.pts *= 4; // Left shift by 2
-
-        pes.pts += (payload[13] & 0x06) >>> 1; // OR by the two LSBs
-
-        pes.dts = pes.pts;
-
-        if (ptsDtsFlags & 0x40) {
-          pes.dts = (payload[14] & 0x0E) << 27 | (payload[15] & 0xFF) << 20 | (payload[16] & 0xFE) << 12 | (payload[17] & 0xFF) << 5 | (payload[18] & 0xFE) >>> 3;
-          pes.dts *= 4; // Left shift by 2
-
-          pes.dts += (payload[18] & 0x06) >>> 1; // OR by the two LSBs
-        }
-      } // the data section starts immediately after the PES header.
-      // pes_header_data_length specifies the number of header bytes
-      // that follow the last byte of the field.
-
-
-      pes.data = payload.subarray(9 + payload[8]);
-    },
-
-    /**
-      * Pass completely parsed PES packets to the next stream in the pipeline
-     **/
-    flushStream = function flushStream(stream, type, forceFlush) {
-      var packetData = new Uint8Array(stream.size),
-          event = {
-        type: type
+      segmentHadPmt = false,
+      // PES packet fragments
+      video = {
+        data: [],
+        size: 0
       },
+      audio = {
+        data: [],
+        size: 0
+      },
+      timedMetadata = {
+        data: [],
+        size: 0
+      },
+      programMapTable,
+      parsePes = function parsePes(payload, pes) {
+        var ptsDtsFlags;
+        var startPrefix = payload[0] << 16 | payload[1] << 8 | payload[2]; // default to an empty array
+
+        pes.data = new Uint8Array(); // In certain live streams, the start of a TS fragment has ts packets
+        // that are frame data that is continuing from the previous fragment. This
+        // is to check that the pes data is the start of a new pes payload
+
+        if (startPrefix !== 1) {
+          return;
+        } // get the packet length, this will be 0 for video
+
+
+        pes.packetLength = 6 + (payload[4] << 8 | payload[5]); // find out if this packets starts a new keyframe
+
+        pes.dataAlignmentIndicator = (payload[6] & 0x04) !== 0; // PES packets may be annotated with a PTS value, or a PTS value
+        // and a DTS value. Determine what combination of values is
+        // available to work with.
+
+        ptsDtsFlags = payload[7]; // PTS and DTS are normally stored as a 33-bit number.  Javascript
+        // performs all bitwise operations on 32-bit integers but javascript
+        // supports a much greater range (52-bits) of integer using standard
+        // mathematical operations.
+        // We construct a 31-bit value using bitwise operators over the 31
+        // most significant bits and then multiply by 4 (equal to a left-shift
+        // of 2) before we add the final 2 least significant bits of the
+        // timestamp (equal to an OR.)
+
+        if (ptsDtsFlags & 0xC0) {
+          // the PTS and DTS are not written out directly. For information
+          // on how they are encoded, see
+          // http://dvd.sourceforge.net/dvdinfo/pes-hdr.html
+          pes.pts = (payload[9] & 0x0E) << 27 | (payload[10] & 0xFF) << 20 | (payload[11] & 0xFE) << 12 | (payload[12] & 0xFF) << 5 | (payload[13] & 0xFE) >>> 3;
+          pes.pts *= 4; // Left shift by 2
+
+          pes.pts += (payload[13] & 0x06) >>> 1; // OR by the two LSBs
+
+          pes.dts = pes.pts;
+
+          if (ptsDtsFlags & 0x40) {
+            pes.dts = (payload[14] & 0x0E) << 27 | (payload[15] & 0xFF) << 20 | (payload[16] & 0xFE) << 12 | (payload[17] & 0xFF) << 5 | (payload[18] & 0xFE) >>> 3;
+            pes.dts *= 4; // Left shift by 2
+
+            pes.dts += (payload[18] & 0x06) >>> 1; // OR by the two LSBs
+          }
+        } // the data section starts immediately after the PES header.
+        // pes_header_data_length specifies the number of header bytes
+        // that follow the last byte of the field.
+
+
+        pes.data = payload.subarray(9 + payload[8]);
+      },
+
+      /**
+        * Pass completely parsed PES packets to the next stream in the pipeline
+       **/
+      flushStream = function flushStream(stream, type, forceFlush) {
+        var packetData = new Uint8Array(stream.size),
+          event = {
+            type: type
+          },
           i = 0,
           offset = 0,
           packetFlushable = false,
           fragment; // do nothing if there is not enough buffered data for a complete
-      // PES header
+        // PES header
 
-      if (!stream.data.length || stream.size < 9) {
-        return;
-      }
+        if (!stream.data.length || stream.size < 9) {
+          return;
+        }
 
-      event.trackId = stream.data[0].pid; // reassemble the packet
+        event.trackId = stream.data[0].pid; // reassemble the packet
 
-      for (i = 0; i < stream.data.length; i++) {
-        fragment = stream.data[i];
-        packetData.set(fragment.data, offset);
-        offset += fragment.data.byteLength;
-      } // parse assembled packet's PES header
-
-
-      parsePes(packetData, event); // non-video PES packets MUST have a non-zero PES_packet_length
-      // check that there is enough stream data to fill the packet
-
-      packetFlushable = type === 'video' || event.packetLength <= stream.size; // flush pending packets if the conditions are right
-
-      if (forceFlush || packetFlushable) {
-        stream.size = 0;
-        stream.data.length = 0;
-      } // only emit packets that are complete. this is to avoid assembling
-      // incomplete PES packets due to poor segmentation
+        for (i = 0; i < stream.data.length; i++) {
+          fragment = stream.data[i];
+          packetData.set(fragment.data, offset);
+          offset += fragment.data.byteLength;
+        } // parse assembled packet's PES header
 
 
-      if (packetFlushable) {
-        self.trigger('data', event);
-      }
-    };
+        parsePes(packetData, event); // non-video PES packets MUST have a non-zero PES_packet_length
+        // check that there is enough stream data to fill the packet
+
+        packetFlushable = type === 'video' || event.packetLength <= stream.size; // flush pending packets if the conditions are right
+
+        if (forceFlush || packetFlushable) {
+          stream.size = 0;
+          stream.data.length = 0;
+        } // only emit packets that are complete. this is to avoid assembling
+        // incomplete PES packets due to poor segmentation
+
+
+        if (packetFlushable) {
+          self.trigger('data', event);
+        }
+      };
 
     _ElementaryStream.prototype.init.call(this);
     /**
@@ -6288,8 +6289,8 @@
 
   var parseId3TagSize = function parseId3TagSize(header, byteIndex) {
     var returnSize = header[byteIndex + 6] << 21 | header[byteIndex + 7] << 14 | header[byteIndex + 8] << 7 | header[byteIndex + 9],
-        flags = header[byteIndex + 5],
-        footerPresent = (flags & 16) >> 4; // if we get a negative returnSize clamp it to 0
+      flags = header[byteIndex + 5],
+      footerPresent = (flags & 16) >> 4; // if we get a negative returnSize clamp it to 0
 
     returnSize = returnSize >= 0 ? returnSize : 0;
 
@@ -6313,8 +6314,8 @@
   var isLikelyAacData$2 = function isLikelyAacData(data) {
     var offset = getId3Offset(data, 0);
     return data.length >= offset + 2 && (data[offset] & 0xFF) === 0xFF && (data[offset + 1] & 0xF0) === 0xF0 && // verify that the 2 layer bits are 0, aka this
-    // is not mp3 data but aac data.
-    (data[offset + 1] & 0x16) === 0x10;
+      // is not mp3 data but aac data.
+      (data[offset + 1] & 0x16) === 0x10;
   };
 
   var parseSyncSafeInteger = function parseSyncSafeInteger(data) {
@@ -6325,7 +6326,7 @@
 
   var percentEncode = function percentEncode(bytes, start, end) {
     var i,
-        result = '';
+      result = '';
 
     for (i = start; i < end; i++) {
       result += '%' + ('00' + bytes[i].toString(16)).slice(-2);
@@ -6342,8 +6343,8 @@
 
   var parseAdtsSize = function parseAdtsSize(header, byteIndex) {
     var lowThree = (header[byteIndex + 5] & 0xE0) >> 5,
-        middle = header[byteIndex + 4] << 3,
-        highTwo = header[byteIndex + 3] & 0x3 << 11;
+      middle = header[byteIndex + 4] << 3,
+      highTwo = header[byteIndex + 3] & 0x3 << 11;
     return highTwo | middle | lowThree;
   };
 
@@ -6443,7 +6444,7 @@
 
   _AacStream = function AacStream() {
     var everything = new Uint8Array(),
-        timeStamp = 0;
+      timeStamp = 0;
 
     _AacStream.prototype.init.call(this);
 
@@ -6453,11 +6454,11 @@
 
     this.push = function (bytes) {
       var frameSize = 0,
-          byteIndex = 0,
-          bytesLeft,
-          chunk,
-          packet,
-          tempLength; // If there are bytes remaining from the last segment, prepend them to the
+        byteIndex = 0,
+        bytesLeft,
+        chunk,
+        packet,
+        tempLength; // If there are bytes remaining from the last segment, prepend them to the
       // bytes that were pushed in
 
       if (everything.length) {
@@ -6600,8 +6601,8 @@
 
   var generateSegmentTimingInfo = function generateSegmentTimingInfo(baseMediaDecodeTime, startDts, startPts, endDts, endPts, prependedContentDuration) {
     var ptsOffsetFromDts = startPts - startDts,
-        decodeDuration = endDts - startDts,
-        presentationDuration = endPts - startPts; // The PTS and DTS values are based on the actual stream times from the segment,
+      decodeDuration = endDts - startDts,
+      presentationDuration = endPts - startPts; // The PTS and DTS values are based on the actual stream times from the segment,
     // however, the player time values will reflect a start from the baseMediaDecodeTime.
     // In order to provide relevant values for the player times, base timing info on the
     // baseMediaDecodeTime and the DTS and PTS durations of the segment.
@@ -6632,10 +6633,10 @@
 
   _AudioSegmentStream$1 = function AudioSegmentStream(track, options) {
     var adtsFrames = [],
-        sequenceNumber,
-        earliestAllowedDts = 0,
-        audioAppendStartTs = 0,
-        videoBaseMediaDecodeTime = Infinity;
+      sequenceNumber,
+      earliestAllowedDts = 0,
+      audioAppendStartTs = 0,
+      videoBaseMediaDecodeTime = Infinity;
     options = options || {};
     sequenceNumber = options.firstSequenceNumber || 0;
 
@@ -6699,10 +6700,10 @@
       if (frames.length) {
         segmentDuration = frames.length * frameDuration;
         this.trigger('segmentTimingInfo', generateSegmentTimingInfo( // The audio track's baseMediaDecodeTime is in audio clock cycles, but the
-        // frame info is in video clock cycles. Convert to match expectation of
-        // listeners (that all timestamps will be based on video clock cycles).
-        clock.audioTsToVideoTs(track.baseMediaDecodeTime, track.samplerate), // frame times are already in video clock, as is segment duration
-        frames[0].dts, frames[0].pts, frames[0].dts + segmentDuration, frames[0].pts + segmentDuration, videoClockCyclesOfSilencePrefixed || 0));
+          // frame info is in video clock cycles. Convert to match expectation of
+          // listeners (that all timestamps will be based on video clock cycles).
+          clock.audioTsToVideoTs(track.baseMediaDecodeTime, track.samplerate), // frame times are already in video clock, as is segment duration
+          frames[0].dts, frames[0].pts, frames[0].dts + segmentDuration, frames[0].pts + segmentDuration, videoClockCyclesOfSilencePrefixed || 0));
         this.trigger('timingInfo', {
           start: frames[0].pts,
           end: frames[0].pts + segmentDuration
@@ -6738,10 +6739,10 @@
 
   _VideoSegmentStream$1 = function VideoSegmentStream(track, options) {
     var sequenceNumber,
-        nalUnits = [],
-        gopsToAlignWith = [],
-        config,
-        pps;
+      nalUnits = [],
+      gopsToAlignWith = [],
+      config,
+      pps;
     options = options || {};
     sequenceNumber = options.firstSequenceNumber || 0;
 
@@ -6785,14 +6786,14 @@
 
     this.flush = function () {
       var frames,
-          gopForFusion,
-          gops,
-          moof,
-          mdat,
-          boxes,
-          prependedContentDuration = 0,
-          firstGop,
-          lastGop; // Throw away nalUnits at the start of the byte stream until
+        gopForFusion,
+        gops,
+        moof,
+        mdat,
+        boxes,
+        prependedContentDuration = 0,
+        firstGop,
+        lastGop; // Throw away nalUnits at the start of the byte stream until
       // we find the first AUD
 
       while (nalUnits.length) {
@@ -6958,15 +6959,15 @@
 
     this.getGopForFusion_ = function (nalUnit) {
       var halfSecond = 45000,
-          // Half-a-second in a 90khz clock
-      allowableOverlap = 10000,
-          // About 3 frames @ 30fps
-      nearestDistance = Infinity,
-          dtsDistance,
-          nearestGopObj,
-          currentGop,
-          currentGopObj,
-          i; // Search for the GOP nearest to the beginning of this nal unit
+        // Half-a-second in a 90khz clock
+        allowableOverlap = 10000,
+        // About 3 frames @ 30fps
+        nearestDistance = Infinity,
+        dtsDistance,
+        nearestGopObj,
+        currentGop,
+        currentGopObj,
+        i; // Search for the GOP nearest to the beginning of this nal unit
 
       for (i = 0; i < this.gopCache_.length; i++) {
         currentGopObj = this.gopCache_[i];
@@ -7206,17 +7207,17 @@
 
   _CoalesceStream.prototype.flush = function (flushSource) {
     var offset = 0,
-        event = {
-      captions: [],
-      captionStreams: {},
-      metadata: [],
-      info: {}
-    },
-        caption,
-        id3,
-        initSegment,
-        timelineStartPts = 0,
-        i;
+      event = {
+        captions: [],
+        captionStreams: {},
+        metadata: [],
+        info: {}
+      },
+      caption,
+      id3,
+      initSegment,
+      timelineStartPts = 0,
+      i;
 
     if (this.pendingTracks.length < this.numberOfTracks) {
       if (flushSource !== 'VideoSegmentStream' && flushSource !== 'AudioSegmentStream') {
@@ -7351,9 +7352,9 @@
 
   _Transmuxer$1 = function Transmuxer(options) {
     var self = this,
-        hasFlushed = true,
-        videoTrack,
-        audioTrack;
+      hasFlushed = true,
+      videoTrack,
+      audioTrack;
 
     _Transmuxer$1.prototype.init.call(this);
 
@@ -7673,14 +7674,14 @@
 
   var findSeiNals = function findSeiNals(avcStream, samples, trackId) {
     var avcView = new DataView(avcStream.buffer, avcStream.byteOffset, avcStream.byteLength),
-        result = {
-      logs: [],
-      seiNals: []
-    },
-        seiNal,
-        i,
-        length,
-        lastMatchedSample;
+      result = {
+        logs: [],
+        seiNals: []
+      },
+      seiNal,
+      i,
+      length,
+      lastMatchedSample;
 
     for (i = 0; i + 4 < avcStream.length; i += length) {
       length = avcView.getUint32(i);
@@ -8124,35 +8125,35 @@
 
   _FlvTag = function FlvTag(type, extraData) {
     var // Counter if this is a metadata tag, nal start marker if this is a video
-    // tag. unused if this is an audio tag
-    adHoc = 0,
-        // :uint
-    // The default size is 16kb but this is not enough to hold iframe
-    // data and the resizing algorithm costs a bit so we create a larger
-    // starting buffer for video tags
-    bufferStartSize = 16384,
-        // checks whether the FLV tag has enough capacity to accept the proposed
-    // write and re-allocates the internal buffers if necessary
-    prepareWrite = function prepareWrite(flv, count) {
-      var bytes,
+      // tag. unused if this is an audio tag
+      adHoc = 0,
+      // :uint
+      // The default size is 16kb but this is not enough to hold iframe
+      // data and the resizing algorithm costs a bit so we create a larger
+      // starting buffer for video tags
+      bufferStartSize = 16384,
+      // checks whether the FLV tag has enough capacity to accept the proposed
+      // write and re-allocates the internal buffers if necessary
+      prepareWrite = function prepareWrite(flv, count) {
+        var bytes,
           minLength = flv.position + count;
 
-      if (minLength < flv.bytes.byteLength) {
-        // there's enough capacity so do nothing
-        return;
-      } // allocate a new buffer and copy over the data that will not be modified
+        if (minLength < flv.bytes.byteLength) {
+          // there's enough capacity so do nothing
+          return;
+        } // allocate a new buffer and copy over the data that will not be modified
 
 
-      bytes = new Uint8Array(minLength * 2);
-      bytes.set(flv.bytes.subarray(0, flv.position), 0);
-      flv.bytes = bytes;
-      flv.view = new DataView(flv.bytes.buffer);
-    },
-        // commonly used metadata properties
-    widthBytes = _FlvTag.widthBytes || new Uint8Array('width'.length),
-        heightBytes = _FlvTag.heightBytes || new Uint8Array('height'.length),
-        videocodecidBytes = _FlvTag.videocodecidBytes || new Uint8Array('videocodecid'.length),
-        i;
+        bytes = new Uint8Array(minLength * 2);
+        bytes.set(flv.bytes.subarray(0, flv.position), 0);
+        flv.bytes = bytes;
+        flv.view = new DataView(flv.bytes.buffer);
+      },
+      // commonly used metadata properties
+      widthBytes = _FlvTag.widthBytes || new Uint8Array('width'.length),
+      heightBytes = _FlvTag.heightBytes || new Uint8Array('height'.length),
+      videocodecidBytes = _FlvTag.videocodecidBytes || new Uint8Array('videocodecid'.length),
+      i;
 
     if (!_FlvTag.widthBytes) {
       // calculating the bytes of common metadata names ahead of time makes the
@@ -8212,7 +8213,7 @@
 
     this.writeBytes = function (bytes, offset, length) {
       var start = offset || 0,
-          end;
+        end;
       length = length || bytes.byteLength;
       end = start + length;
       prepareWrite(this, length);
@@ -8269,7 +8270,7 @@
 
     this.endNalUnit = function (nalContainer) {
       var nalStart, // :uint
-      nalLength; // :uint
+        nalLength; // :uint
       // Rewind to the marker and write the size
 
       if (this.length === adHoc + 4) {
@@ -8358,7 +8359,7 @@
 
     this.finalize = function () {
       var dtsDelta, // :int
-      len; // :int
+        len; // :int
 
       switch (this.bytes[0]) {
         // Video Data
@@ -8533,15 +8534,15 @@
 
   CoalesceStream.prototype.flush = function (flushSource) {
     var id3,
-        caption,
-        i,
-        timelineStartPts,
-        event = {
-      tags: {},
-      captions: [],
-      captionStreams: {},
-      metadata: []
-    };
+      caption,
+      i,
+      timelineStartPts,
+      event = {
+        tags: {},
+        captions: [],
+        captionStreams: {},
+        metadata: []
+      };
 
     if (this.pendingTracks < this.numberOfTracks) {
       if (flushSource !== 'VideoSegmentStream' && flushSource !== 'AudioSegmentStream') {
@@ -8690,7 +8691,7 @@
 
   extraDataTag = function extraDataTag(track, pts) {
     var i,
-        tag = new flvTag(flvTag.VIDEO_TAG, true);
+      tag = new flvTag(flvTag.VIDEO_TAG, true);
     tag.dts = pts;
     tag.pts = pts;
     tag.writeByte(0x01); // version
@@ -8727,8 +8728,8 @@
 
   _AudioSegmentStream = function AudioSegmentStream(track) {
     var adtsFrames = [],
-        videoKeyFrames = [],
-        oldExtraData;
+      videoKeyFrames = [],
+      oldExtraData;
 
     _AudioSegmentStream.prototype.init.call(this);
 
@@ -8752,9 +8753,9 @@
 
     this.flush = function () {
       var currentFrame,
-          adtsFrame,
-          lastMetaPts,
-          tags = new tagList(); // return early if no audio data has been observed
+        adtsFrame,
+        lastMetaPts,
+        tags = new tagList(); // return early if no audio data has been observed
 
       if (adtsFrames.length === 0) {
         this.trigger('done', 'AudioSegmentStream');
@@ -8836,8 +8837,8 @@
 
   _VideoSegmentStream = function VideoSegmentStream(track) {
     var nalUnits = [],
-        config,
-        h264Frame;
+      config,
+      h264Frame;
 
     _VideoSegmentStream.prototype.init.call(this);
 
@@ -8874,7 +8875,7 @@
 
     this.flush = function () {
       var currentNal,
-          tags = new tagList(); // Throw away nalUnits at the start of the byte stream until we find
+        tags = new tagList(); // Throw away nalUnits at the start of the byte stream until we find
       // the first AUD
 
       while (nalUnits.length) {
@@ -8950,18 +8951,18 @@
 
   _Transmuxer = function Transmuxer(options) {
     var self = this,
-        packetStream,
-        parseStream,
-        elementaryStream,
-        videoTimestampRolloverStream,
-        audioTimestampRolloverStream,
-        timedMetadataTimestampRolloverStream,
-        adtsStream,
-        h264Stream,
-        videoSegmentStream,
-        audioSegmentStream,
-        captionStream,
-        coalesceStream$1;
+      packetStream,
+      parseStream,
+      elementaryStream,
+      videoTimestampRolloverStream,
+      audioTimestampRolloverStream,
+      timedMetadataTimestampRolloverStream,
+      adtsStream,
+      h264Stream,
+      videoSegmentStream,
+      audioSegmentStream,
+      captionStream,
+      coalesceStream$1;
 
     _Transmuxer.prototype.init.call(this);
 
@@ -9065,10 +9066,10 @@
   var getFlvHeader = function getFlvHeader(duration, audio, video) {
     // :ByteArray {
     var headBytes = new Uint8Array(3 + 1 + 1 + 4),
-        head = new DataView(headBytes.buffer),
-        metadata,
-        result,
-        metadataLength; // default arguments
+      head = new DataView(headBytes.buffer),
+      metadata,
+      result,
+      metadataLength; // default arguments
 
     duration = duration || 0;
     audio = audio === undefined ? true : audio;
@@ -9140,12 +9141,12 @@
 
   var AudioSegmentStream = function AudioSegmentStream(track, options) {
     var adtsFrames = [],
-        sequenceNumber = 0,
-        earliestAllowedDts = 0,
-        audioAppendStartTs = 0,
-        videoBaseMediaDecodeTime = Infinity,
-        segmentStartPts = null,
-        segmentEndPts = null;
+      sequenceNumber = 0,
+      earliestAllowedDts = 0,
+      audioAppendStartTs = 0,
+      videoBaseMediaDecodeTime = Infinity,
+      segmentStartPts = null,
+      segmentEndPts = null;
     options = options || {};
     AudioSegmentStream.prototype.init.call(this);
 
@@ -9262,15 +9263,15 @@
 
   var VideoSegmentStream = function VideoSegmentStream(track, options) {
     var sequenceNumber = 0,
-        nalUnits = [],
-        frameCache = [],
-        // gopsToAlignWith = [],
-    config,
-        pps,
-        segmentStartPts = null,
-        segmentEndPts = null,
-        gops,
-        ensureNextFrameIsKeyFrame = true;
+      nalUnits = [],
+      frameCache = [],
+      // gopsToAlignWith = [],
+      config,
+      pps,
+      segmentStartPts = null,
+      segmentEndPts = null,
+      gops,
+      ensureNextFrameIsKeyFrame = true;
     options = options || {};
     VideoSegmentStream.prototype.init.call(this);
 
@@ -9623,7 +9624,7 @@
 
   var Transmuxer = function Transmuxer(options) {
     var pipeline = null,
-        hasFlushed = true;
+      hasFlushed = true;
     options = options || {};
     Transmuxer.prototype.init.call(this);
     options.baseMediaDecodeTime = options.baseMediaDecodeTime || 0;
@@ -9748,14 +9749,14 @@
 
   var parseSidx = function parseSidx(data) {
     var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-        result = {
-      version: data[0],
-      flags: new Uint8Array(data.subarray(1, 4)),
-      references: [],
-      referenceId: view.getUint32(4),
-      timescale: view.getUint32(8)
-    },
-        i = 12;
+      result = {
+        version: data[0],
+        flags: new Uint8Array(data.subarray(1, 4)),
+        references: [],
+        referenceId: view.getUint32(4),
+        timescale: view.getUint32(8)
+      },
+      i = 12;
 
     if (result.version === 0) {
       result.earliestPresentationTime = view.getUint32(i);
@@ -9792,627 +9793,627 @@
   var getUint64 = numbers.getUint64;
 
   var inspectMp4,
-      _textifyMp,
-      parseMp4Date = function parseMp4Date(seconds) {
-    return new Date(seconds * 1000 - 2082844800000);
-  },
-      nalParse = function nalParse(avcStream) {
-    var avcView = new DataView(avcStream.buffer, avcStream.byteOffset, avcStream.byteLength),
+    _textifyMp,
+    parseMp4Date = function parseMp4Date(seconds) {
+      return new Date(seconds * 1000 - 2082844800000);
+    },
+    nalParse = function nalParse(avcStream) {
+      var avcView = new DataView(avcStream.buffer, avcStream.byteOffset, avcStream.byteLength),
         result = [],
         i,
         length;
 
-    for (i = 0; i + 4 < avcStream.length; i += length) {
-      length = avcView.getUint32(i);
-      i += 4; // bail if this doesn't appear to be an H264 stream
+      for (i = 0; i + 4 < avcStream.length; i += length) {
+        length = avcView.getUint32(i);
+        i += 4; // bail if this doesn't appear to be an H264 stream
 
-      if (length <= 0) {
-        result.push('<span style=\'color:red;\'>MALFORMED DATA</span>');
-        continue;
+        if (length <= 0) {
+          result.push('<span style=\'color:red;\'>MALFORMED DATA</span>');
+          continue;
+        }
+
+        switch (avcStream[i] & 0x1F) {
+          case 0x01:
+            result.push('slice_layer_without_partitioning_rbsp');
+            break;
+
+          case 0x05:
+            result.push('slice_layer_without_partitioning_rbsp_idr');
+            break;
+
+          case 0x06:
+            result.push('sei_rbsp');
+            break;
+
+          case 0x07:
+            result.push('seq_parameter_set_rbsp');
+            break;
+
+          case 0x08:
+            result.push('pic_parameter_set_rbsp');
+            break;
+
+          case 0x09:
+            result.push('access_unit_delimiter_rbsp');
+            break;
+
+          default:
+            result.push('UNKNOWN NAL - ' + avcStream[i] & 0x1F);
+            break;
+        }
       }
 
-      switch (avcStream[i] & 0x1F) {
-        case 0x01:
-          result.push('slice_layer_without_partitioning_rbsp');
-          break;
-
-        case 0x05:
-          result.push('slice_layer_without_partitioning_rbsp_idr');
-          break;
-
-        case 0x06:
-          result.push('sei_rbsp');
-          break;
-
-        case 0x07:
-          result.push('seq_parameter_set_rbsp');
-          break;
-
-        case 0x08:
-          result.push('pic_parameter_set_rbsp');
-          break;
-
-        case 0x09:
-          result.push('access_unit_delimiter_rbsp');
-          break;
-
-        default:
-          result.push('UNKNOWN NAL - ' + avcStream[i] & 0x1F);
-          break;
-      }
-    }
-
-    return result;
-  },
-      // registry of handlers for individual mp4 box types
-  parse = {
-    // codingname, not a first-class box type. stsd entries share the
-    // same format as real boxes so the parsing infrastructure can be
-    // shared
-    avc1: function avc1(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-      return {
-        dataReferenceIndex: view.getUint16(6),
-        width: view.getUint16(24),
-        height: view.getUint16(26),
-        horizresolution: view.getUint16(28) + view.getUint16(30) / 16,
-        vertresolution: view.getUint16(32) + view.getUint16(34) / 16,
-        frameCount: view.getUint16(40),
-        depth: view.getUint16(74),
-        config: inspectMp4(data.subarray(78, data.byteLength))
-      };
+      return result;
     },
-    avcC: function avcC(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        configurationVersion: data[0],
-        avcProfileIndication: data[1],
-        profileCompatibility: data[2],
-        avcLevelIndication: data[3],
-        lengthSizeMinusOne: data[4] & 0x03,
-        sps: [],
-        pps: []
+    // registry of handlers for individual mp4 box types
+    parse = {
+      // codingname, not a first-class box type. stsd entries share the
+      // same format as real boxes so the parsing infrastructure can be
+      // shared
+      avc1: function avc1(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        return {
+          dataReferenceIndex: view.getUint16(6),
+          width: view.getUint16(24),
+          height: view.getUint16(26),
+          horizresolution: view.getUint16(28) + view.getUint16(30) / 16,
+          vertresolution: view.getUint16(32) + view.getUint16(34) / 16,
+          frameCount: view.getUint16(40),
+          depth: view.getUint16(74),
+          config: inspectMp4(data.subarray(78, data.byteLength))
+        };
       },
+      avcC: function avcC(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            configurationVersion: data[0],
+            avcProfileIndication: data[1],
+            profileCompatibility: data[2],
+            avcLevelIndication: data[3],
+            lengthSizeMinusOne: data[4] & 0x03,
+            sps: [],
+            pps: []
+          },
           numOfSequenceParameterSets = data[5] & 0x1f,
           numOfPictureParameterSets,
           nalSize,
           offset,
           i; // iterate past any SPSs
 
-      offset = 6;
+        offset = 6;
 
-      for (i = 0; i < numOfSequenceParameterSets; i++) {
-        nalSize = view.getUint16(offset);
-        offset += 2;
-        result.sps.push(new Uint8Array(data.subarray(offset, offset + nalSize)));
-        offset += nalSize;
-      } // iterate past any PPSs
+        for (i = 0; i < numOfSequenceParameterSets; i++) {
+          nalSize = view.getUint16(offset);
+          offset += 2;
+          result.sps.push(new Uint8Array(data.subarray(offset, offset + nalSize)));
+          offset += nalSize;
+        } // iterate past any PPSs
 
 
-      numOfPictureParameterSets = data[offset];
-      offset++;
+        numOfPictureParameterSets = data[offset];
+        offset++;
 
-      for (i = 0; i < numOfPictureParameterSets; i++) {
-        nalSize = view.getUint16(offset);
-        offset += 2;
-        result.pps.push(new Uint8Array(data.subarray(offset, offset + nalSize)));
-        offset += nalSize;
-      }
+        for (i = 0; i < numOfPictureParameterSets; i++) {
+          nalSize = view.getUint16(offset);
+          offset += 2;
+          result.pps.push(new Uint8Array(data.subarray(offset, offset + nalSize)));
+          offset += nalSize;
+        }
 
-      return result;
-    },
-    btrt: function btrt(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-      return {
-        bufferSizeDB: view.getUint32(0),
-        maxBitrate: view.getUint32(4),
-        avgBitrate: view.getUint32(8)
-      };
-    },
-    edts: function edts(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    elst: function elst(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        edits: []
+        return result;
       },
+      btrt: function btrt(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        return {
+          bufferSizeDB: view.getUint32(0),
+          maxBitrate: view.getUint32(4),
+          avgBitrate: view.getUint32(8)
+        };
+      },
+      edts: function edts(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      elst: function elst(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4)),
+            edits: []
+          },
           entryCount = view.getUint32(4),
           i;
 
-      for (i = 8; entryCount; entryCount--) {
-        if (result.version === 0) {
-          result.edits.push({
-            segmentDuration: view.getUint32(i),
-            mediaTime: view.getInt32(i + 4),
-            mediaRate: view.getUint16(i + 8) + view.getUint16(i + 10) / (256 * 256)
-          });
-          i += 12;
-        } else {
-          result.edits.push({
-            segmentDuration: getUint64(data.subarray(i)),
-            mediaTime: getUint64(data.subarray(i + 8)),
-            mediaRate: view.getUint16(i + 16) + view.getUint16(i + 18) / (256 * 256)
-          });
-          i += 20;
-        }
-      }
-
-      return result;
-    },
-    esds: function esds(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        esId: data[6] << 8 | data[7],
-        streamPriority: data[8] & 0x1f,
-        decoderConfig: {
-          objectProfileIndication: data[11],
-          streamType: data[12] >>> 2 & 0x3f,
-          bufferSize: data[13] << 16 | data[14] << 8 | data[15],
-          maxBitrate: data[16] << 24 | data[17] << 16 | data[18] << 8 | data[19],
-          avgBitrate: data[20] << 24 | data[21] << 16 | data[22] << 8 | data[23],
-          decoderConfigDescriptor: {
-            tag: data[24],
-            length: data[25],
-            audioObjectType: data[26] >>> 3 & 0x1f,
-            samplingFrequencyIndex: (data[26] & 0x07) << 1 | data[27] >>> 7 & 0x01,
-            channelConfiguration: data[27] >>> 3 & 0x0f
+        for (i = 8; entryCount; entryCount--) {
+          if (result.version === 0) {
+            result.edits.push({
+              segmentDuration: view.getUint32(i),
+              mediaTime: view.getInt32(i + 4),
+              mediaRate: view.getUint16(i + 8) + view.getUint16(i + 10) / (256 * 256)
+            });
+            i += 12;
+          } else {
+            result.edits.push({
+              segmentDuration: getUint64(data.subarray(i)),
+              mediaTime: getUint64(data.subarray(i + 8)),
+              mediaRate: view.getUint16(i + 16) + view.getUint16(i + 18) / (256 * 256)
+            });
+            i += 20;
           }
         }
-      };
-    },
-    ftyp: function ftyp(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        majorBrand: parseType_1(data.subarray(0, 4)),
-        minorVersion: view.getUint32(4),
-        compatibleBrands: []
+
+        return result;
       },
+      esds: function esds(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          esId: data[6] << 8 | data[7],
+          streamPriority: data[8] & 0x1f,
+          decoderConfig: {
+            objectProfileIndication: data[11],
+            streamType: data[12] >>> 2 & 0x3f,
+            bufferSize: data[13] << 16 | data[14] << 8 | data[15],
+            maxBitrate: data[16] << 24 | data[17] << 16 | data[18] << 8 | data[19],
+            avgBitrate: data[20] << 24 | data[21] << 16 | data[22] << 8 | data[23],
+            decoderConfigDescriptor: {
+              tag: data[24],
+              length: data[25],
+              audioObjectType: data[26] >>> 3 & 0x1f,
+              samplingFrequencyIndex: (data[26] & 0x07) << 1 | data[27] >>> 7 & 0x01,
+              channelConfiguration: data[27] >>> 3 & 0x0f
+            }
+          }
+        };
+      },
+      ftyp: function ftyp(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            majorBrand: parseType_1(data.subarray(0, 4)),
+            minorVersion: view.getUint32(4),
+            compatibleBrands: []
+          },
           i = 8;
 
-      while (i < data.byteLength) {
-        result.compatibleBrands.push(parseType_1(data.subarray(i, i + 4)));
-        i += 4;
-      }
-
-      return result;
-    },
-    dinf: function dinf(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    dref: function dref(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        dataReferences: inspectMp4(data.subarray(8))
-      };
-    },
-    hdlr: function hdlr(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        handlerType: parseType_1(data.subarray(8, 12)),
-        name: ''
-      },
-          i = 8; // parse out the name field
-
-      for (i = 24; i < data.byteLength; i++) {
-        if (data[i] === 0x00) {
-          // the name field is null-terminated
-          i++;
-          break;
+        while (i < data.byteLength) {
+          result.compatibleBrands.push(parseType_1(data.subarray(i, i + 4)));
+          i += 4;
         }
 
-        result.name += String.fromCharCode(data[i]);
-      } // decode UTF-8 to javascript's internal representation
-      // see http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
+        return result;
+      },
+      dinf: function dinf(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      dref: function dref(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          dataReferences: inspectMp4(data.subarray(8))
+        };
+      },
+      hdlr: function hdlr(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4)),
+            handlerType: parseType_1(data.subarray(8, 12)),
+            name: ''
+          },
+          i = 8; // parse out the name field
+
+        for (i = 24; i < data.byteLength; i++) {
+          if (data[i] === 0x00) {
+            // the name field is null-terminated
+            i++;
+            break;
+          }
+
+          result.name += String.fromCharCode(data[i]);
+        } // decode UTF-8 to javascript's internal representation
+        // see http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
 
 
-      result.name = decodeURIComponent(escape(result.name));
-      return result;
-    },
-    mdat: function mdat(data) {
-      return {
-        byteLength: data.byteLength,
-        nals: nalParse(data)
-      };
-    },
-    mdhd: function mdhd(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+        result.name = decodeURIComponent(escape(result.name));
+        return result;
+      },
+      mdat: function mdat(data) {
+        return {
+          byteLength: data.byteLength,
+          nals: nalParse(data)
+        };
+      },
+      mdhd: function mdhd(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
           i = 4,
           language,
           result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        language: ''
-      };
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4)),
+            language: ''
+          };
 
-      if (result.version === 1) {
-        i += 4;
-        result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+        if (result.version === 1) {
+          i += 4;
+          result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
 
-        i += 8;
-        result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+          i += 8;
+          result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
 
-        i += 4;
-        result.timescale = view.getUint32(i);
-        i += 8;
-        result.duration = view.getUint32(i); // truncating top 4 bytes
-      } else {
-        result.creationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.modificationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.timescale = view.getUint32(i);
-        i += 4;
-        result.duration = view.getUint32(i);
-      }
+          i += 4;
+          result.timescale = view.getUint32(i);
+          i += 8;
+          result.duration = view.getUint32(i); // truncating top 4 bytes
+        } else {
+          result.creationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.modificationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.timescale = view.getUint32(i);
+          i += 4;
+          result.duration = view.getUint32(i);
+        }
 
-      i += 4; // language is stored as an ISO-639-2/T code in an array of three 5-bit fields
-      // each field is the packed difference between its ASCII value and 0x60
+        i += 4; // language is stored as an ISO-639-2/T code in an array of three 5-bit fields
+        // each field is the packed difference between its ASCII value and 0x60
 
-      language = view.getUint16(i);
-      result.language += String.fromCharCode((language >> 10) + 0x60);
-      result.language += String.fromCharCode(((language & 0x03e0) >> 5) + 0x60);
-      result.language += String.fromCharCode((language & 0x1f) + 0x60);
-      return result;
-    },
-    mdia: function mdia(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    mfhd: function mfhd(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        sequenceNumber: data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]
-      };
-    },
-    minf: function minf(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    // codingname, not a first-class box type. stsd entries share the
-    // same format as real boxes so the parsing infrastructure can be
-    // shared
-    mp4a: function mp4a(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+        language = view.getUint16(i);
+        result.language += String.fromCharCode((language >> 10) + 0x60);
+        result.language += String.fromCharCode(((language & 0x03e0) >> 5) + 0x60);
+        result.language += String.fromCharCode((language & 0x1f) + 0x60);
+        return result;
+      },
+      mdia: function mdia(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      mfhd: function mfhd(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          sequenceNumber: data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]
+        };
+      },
+      minf: function minf(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      // codingname, not a first-class box type. stsd entries share the
+      // same format as real boxes so the parsing infrastructure can be
+      // shared
+      mp4a: function mp4a(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
           result = {
-        // 6 bytes reserved
-        dataReferenceIndex: view.getUint16(6),
-        // 4 + 4 bytes reserved
-        channelcount: view.getUint16(16),
-        samplesize: view.getUint16(18),
-        // 2 bytes pre_defined
-        // 2 bytes reserved
-        samplerate: view.getUint16(24) + view.getUint16(26) / 65536
-      }; // if there are more bytes to process, assume this is an ISO/IEC
-      // 14496-14 MP4AudioSampleEntry and parse the ESDBox
+            // 6 bytes reserved
+            dataReferenceIndex: view.getUint16(6),
+            // 4 + 4 bytes reserved
+            channelcount: view.getUint16(16),
+            samplesize: view.getUint16(18),
+            // 2 bytes pre_defined
+            // 2 bytes reserved
+            samplerate: view.getUint16(24) + view.getUint16(26) / 65536
+          }; // if there are more bytes to process, assume this is an ISO/IEC
+        // 14496-14 MP4AudioSampleEntry and parse the ESDBox
 
-      if (data.byteLength > 28) {
-        result.streamDescriptor = inspectMp4(data.subarray(28))[0];
-      }
+        if (data.byteLength > 28) {
+          result.streamDescriptor = inspectMp4(data.subarray(28))[0];
+        }
 
-      return result;
-    },
-    moof: function moof(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    moov: function moov(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    mvex: function mvex(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    mvhd: function mvhd(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+        return result;
+      },
+      moof: function moof(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      moov: function moov(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      mvex: function mvex(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      mvhd: function mvhd(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
           i = 4,
           result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4))
-      };
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4))
+          };
 
-      if (result.version === 1) {
-        i += 4;
-        result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+        if (result.version === 1) {
+          i += 4;
+          result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
 
-        i += 8;
-        result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+          i += 8;
+          result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
 
-        i += 4;
-        result.timescale = view.getUint32(i);
-        i += 8;
-        result.duration = view.getUint32(i); // truncating top 4 bytes
-      } else {
-        result.creationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.modificationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.timescale = view.getUint32(i);
-        i += 4;
-        result.duration = view.getUint32(i);
-      }
+          i += 4;
+          result.timescale = view.getUint32(i);
+          i += 8;
+          result.duration = view.getUint32(i); // truncating top 4 bytes
+        } else {
+          result.creationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.modificationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.timescale = view.getUint32(i);
+          i += 4;
+          result.duration = view.getUint32(i);
+        }
 
-      i += 4; // convert fixed-point, base 16 back to a number
+        i += 4; // convert fixed-point, base 16 back to a number
 
-      result.rate = view.getUint16(i) + view.getUint16(i + 2) / 16;
-      i += 4;
-      result.volume = view.getUint8(i) + view.getUint8(i + 1) / 8;
-      i += 2;
-      i += 2;
-      i += 2 * 4;
-      result.matrix = new Uint32Array(data.subarray(i, i + 9 * 4));
-      i += 9 * 4;
-      i += 6 * 4;
-      result.nextTrackId = view.getUint32(i);
-      return result;
-    },
-    pdin: function pdin(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-      return {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        rate: view.getUint32(4),
-        initialDelay: view.getUint32(8)
-      };
-    },
-    sdtp: function sdtp(data) {
-      var result = {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        samples: []
+        result.rate = view.getUint16(i) + view.getUint16(i + 2) / 16;
+        i += 4;
+        result.volume = view.getUint8(i) + view.getUint8(i + 1) / 8;
+        i += 2;
+        i += 2;
+        i += 2 * 4;
+        result.matrix = new Uint32Array(data.subarray(i, i + 9 * 4));
+        i += 9 * 4;
+        i += 6 * 4;
+        result.nextTrackId = view.getUint32(i);
+        return result;
       },
+      pdin: function pdin(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        return {
+          version: view.getUint8(0),
+          flags: new Uint8Array(data.subarray(1, 4)),
+          rate: view.getUint32(4),
+          initialDelay: view.getUint32(8)
+        };
+      },
+      sdtp: function sdtp(data) {
+        var result = {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          samples: []
+        },
           i;
 
-      for (i = 4; i < data.byteLength; i++) {
-        result.samples.push({
-          dependsOn: (data[i] & 0x30) >> 4,
-          isDependedOn: (data[i] & 0x0c) >> 2,
-          hasRedundancy: data[i] & 0x03
-        });
-      }
+        for (i = 4; i < data.byteLength; i++) {
+          result.samples.push({
+            dependsOn: (data[i] & 0x30) >> 4,
+            isDependedOn: (data[i] & 0x0c) >> 2,
+            hasRedundancy: data[i] & 0x03
+          });
+        }
 
-      return result;
-    },
-    sidx: parseSidx_1,
-    smhd: function smhd(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        balance: data[4] + data[5] / 256
-      };
-    },
-    stbl: function stbl(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    ctts: function ctts(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        compositionOffsets: []
+        return result;
       },
+      sidx: parseSidx_1,
+      smhd: function smhd(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          balance: data[4] + data[5] / 256
+        };
+      },
+      stbl: function stbl(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      ctts: function ctts(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4)),
+            compositionOffsets: []
+          },
           entryCount = view.getUint32(4),
           i;
 
-      for (i = 8; entryCount; i += 8, entryCount--) {
-        result.compositionOffsets.push({
-          sampleCount: view.getUint32(i),
-          sampleOffset: view[result.version === 0 ? 'getUint32' : 'getInt32'](i + 4)
-        });
-      }
+        for (i = 8; entryCount; i += 8, entryCount--) {
+          result.compositionOffsets.push({
+            sampleCount: view.getUint32(i),
+            sampleOffset: view[result.version === 0 ? 'getUint32' : 'getInt32'](i + 4)
+          });
+        }
 
-      return result;
-    },
-    stss: function stss(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4)),
-        syncSamples: []
+        return result;
       },
+      stss: function stss(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4)),
+            syncSamples: []
+          },
           entryCount = view.getUint32(4),
           i;
 
-      for (i = 8; entryCount; i += 4, entryCount--) {
-        result.syncSamples.push(view.getUint32(i));
-      }
+        for (i = 8; entryCount; i += 4, entryCount--) {
+          result.syncSamples.push(view.getUint32(i));
+        }
 
-      return result;
-    },
-    stco: function stco(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        chunkOffsets: []
+        return result;
       },
+      stco: function stco(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: data[0],
+            flags: new Uint8Array(data.subarray(1, 4)),
+            chunkOffsets: []
+          },
           entryCount = view.getUint32(4),
           i;
 
-      for (i = 8; entryCount; i += 4, entryCount--) {
-        result.chunkOffsets.push(view.getUint32(i));
-      }
+        for (i = 8; entryCount; i += 4, entryCount--) {
+          result.chunkOffsets.push(view.getUint32(i));
+        }
 
-      return result;
-    },
-    stsc: function stsc(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+        return result;
+      },
+      stsc: function stsc(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
           entryCount = view.getUint32(4),
           result = {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        sampleToChunks: []
-      },
+            version: data[0],
+            flags: new Uint8Array(data.subarray(1, 4)),
+            sampleToChunks: []
+          },
           i;
 
-      for (i = 8; entryCount; i += 12, entryCount--) {
-        result.sampleToChunks.push({
-          firstChunk: view.getUint32(i),
-          samplesPerChunk: view.getUint32(i + 4),
-          sampleDescriptionIndex: view.getUint32(i + 8)
-        });
-      }
+        for (i = 8; entryCount; i += 12, entryCount--) {
+          result.sampleToChunks.push({
+            firstChunk: view.getUint32(i),
+            samplesPerChunk: view.getUint32(i + 4),
+            sampleDescriptionIndex: view.getUint32(i + 8)
+          });
+        }
 
-      return result;
-    },
-    stsd: function stsd(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        sampleDescriptions: inspectMp4(data.subarray(8))
-      };
-    },
-    stsz: function stsz(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        sampleSize: view.getUint32(4),
-        entries: []
+        return result;
       },
+      stsd: function stsd(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          sampleDescriptions: inspectMp4(data.subarray(8))
+        };
+      },
+      stsz: function stsz(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: data[0],
+            flags: new Uint8Array(data.subarray(1, 4)),
+            sampleSize: view.getUint32(4),
+            entries: []
+          },
           i;
 
-      for (i = 12; i < data.byteLength; i += 4) {
-        result.entries.push(view.getUint32(i));
-      }
+        for (i = 12; i < data.byteLength; i += 4) {
+          result.entries.push(view.getUint32(i));
+        }
 
-      return result;
-    },
-    stts: function stts(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
-          result = {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        timeToSamples: []
+        return result;
       },
+      stts: function stts(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+          result = {
+            version: data[0],
+            flags: new Uint8Array(data.subarray(1, 4)),
+            timeToSamples: []
+          },
           entryCount = view.getUint32(4),
           i;
 
-      for (i = 8; entryCount; i += 8, entryCount--) {
-        result.timeToSamples.push({
-          sampleCount: view.getUint32(i),
-          sampleDelta: view.getUint32(i + 4)
-        });
-      }
+        for (i = 8; entryCount; i += 8, entryCount--) {
+          result.timeToSamples.push({
+            sampleCount: view.getUint32(i),
+            sampleDelta: view.getUint32(i + 4)
+          });
+        }
 
-      return result;
-    },
-    styp: function styp(data) {
-      return parse.ftyp(data);
-    },
-    tfdt: parseTfdt,
-    tfhd: parseTfhd,
-    tkhd: function tkhd(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
+        return result;
+      },
+      styp: function styp(data) {
+        return parse.ftyp(data);
+      },
+      tfdt: parseTfdt,
+      tfhd: parseTfhd,
+      tkhd: function tkhd(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength),
           i = 4,
           result = {
-        version: view.getUint8(0),
-        flags: new Uint8Array(data.subarray(1, 4))
-      };
+            version: view.getUint8(0),
+            flags: new Uint8Array(data.subarray(1, 4))
+          };
 
-      if (result.version === 1) {
-        i += 4;
-        result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+        if (result.version === 1) {
+          i += 4;
+          result.creationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
 
-        i += 8;
-        result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+          i += 8;
+          result.modificationTime = parseMp4Date(view.getUint32(i)); // truncating top 4 bytes
+
+          i += 4;
+          result.trackId = view.getUint32(i);
+          i += 4;
+          i += 8;
+          result.duration = view.getUint32(i); // truncating top 4 bytes
+        } else {
+          result.creationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.modificationTime = parseMp4Date(view.getUint32(i));
+          i += 4;
+          result.trackId = view.getUint32(i);
+          i += 4;
+          i += 4;
+          result.duration = view.getUint32(i);
+        }
 
         i += 4;
-        result.trackId = view.getUint32(i);
+        i += 2 * 4;
+        result.layer = view.getUint16(i);
+        i += 2;
+        result.alternateGroup = view.getUint16(i);
+        i += 2; // convert fixed-point, base 16 back to a number
+
+        result.volume = view.getUint8(i) + view.getUint8(i + 1) / 8;
+        i += 2;
+        i += 2;
+        result.matrix = new Uint32Array(data.subarray(i, i + 9 * 4));
+        i += 9 * 4;
+        result.width = view.getUint16(i) + view.getUint16(i + 2) / 65536;
         i += 4;
-        i += 8;
-        result.duration = view.getUint32(i); // truncating top 4 bytes
-      } else {
-        result.creationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.modificationTime = parseMp4Date(view.getUint32(i));
-        i += 4;
-        result.trackId = view.getUint32(i);
-        i += 4;
-        i += 4;
-        result.duration = view.getUint32(i);
+        result.height = view.getUint16(i) + view.getUint16(i + 2) / 65536;
+        return result;
+      },
+      traf: function traf(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      trak: function trak(data) {
+        return {
+          boxes: inspectMp4(data)
+        };
+      },
+      trex: function trex(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          trackId: view.getUint32(4),
+          defaultSampleDescriptionIndex: view.getUint32(8),
+          defaultSampleDuration: view.getUint32(12),
+          defaultSampleSize: view.getUint32(16),
+          sampleDependsOn: data[20] & 0x03,
+          sampleIsDependedOn: (data[21] & 0xc0) >> 6,
+          sampleHasRedundancy: (data[21] & 0x30) >> 4,
+          samplePaddingValue: (data[21] & 0x0e) >> 1,
+          sampleIsDifferenceSample: !!(data[21] & 0x01),
+          sampleDegradationPriority: view.getUint16(22)
+        };
+      },
+      trun: parseTrun,
+      'url ': function url(data) {
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4))
+        };
+      },
+      vmhd: function vmhd(data) {
+        var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
+        return {
+          version: data[0],
+          flags: new Uint8Array(data.subarray(1, 4)),
+          graphicsmode: view.getUint16(4),
+          opcolor: new Uint16Array([view.getUint16(6), view.getUint16(8), view.getUint16(10)])
+        };
       }
-
-      i += 4;
-      i += 2 * 4;
-      result.layer = view.getUint16(i);
-      i += 2;
-      result.alternateGroup = view.getUint16(i);
-      i += 2; // convert fixed-point, base 16 back to a number
-
-      result.volume = view.getUint8(i) + view.getUint8(i + 1) / 8;
-      i += 2;
-      i += 2;
-      result.matrix = new Uint32Array(data.subarray(i, i + 9 * 4));
-      i += 9 * 4;
-      result.width = view.getUint16(i) + view.getUint16(i + 2) / 65536;
-      i += 4;
-      result.height = view.getUint16(i) + view.getUint16(i + 2) / 65536;
-      return result;
-    },
-    traf: function traf(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    trak: function trak(data) {
-      return {
-        boxes: inspectMp4(data)
-      };
-    },
-    trex: function trex(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        trackId: view.getUint32(4),
-        defaultSampleDescriptionIndex: view.getUint32(8),
-        defaultSampleDuration: view.getUint32(12),
-        defaultSampleSize: view.getUint32(16),
-        sampleDependsOn: data[20] & 0x03,
-        sampleIsDependedOn: (data[21] & 0xc0) >> 6,
-        sampleHasRedundancy: (data[21] & 0x30) >> 4,
-        samplePaddingValue: (data[21] & 0x0e) >> 1,
-        sampleIsDifferenceSample: !!(data[21] & 0x01),
-        sampleDegradationPriority: view.getUint16(22)
-      };
-    },
-    trun: parseTrun,
-    'url ': function url(data) {
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4))
-      };
-    },
-    vmhd: function vmhd(data) {
-      var view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-      return {
-        version: data[0],
-        flags: new Uint8Array(data.subarray(1, 4)),
-        graphicsmode: view.getUint16(4),
-        opcolor: new Uint16Array([view.getUint16(6), view.getUint16(8), view.getUint16(10)])
-      };
-    }
-  };
+    };
   /**
    * Return a javascript array of box objects parsed from an ISO base
    * media file.
@@ -10423,12 +10424,12 @@
 
   inspectMp4 = function inspectMp4(data) {
     var i = 0,
-        result = [],
-        view,
-        size,
-        type,
-        end,
-        box; // Convert data from Uint8Array to ArrayBuffer, to follow Dataview API
+      result = [],
+      view,
+      size,
+      type,
+      end,
+      box; // Convert data from Uint8Array to ArrayBuffer, to follow Dataview API
 
     var ab = new ArrayBuffer(data.length);
     var v = new Uint8Array(ab);
@@ -10480,40 +10481,40 @@
     return inspectedMp4.map(function (box, index) {
       // list the box type first at the current indentation level
       return indent + box.type + '\n' + // the type is already included and handle child boxes separately
-      Object.keys(box).filter(function (key) {
-        return key !== 'type' && key !== 'boxes'; // output all the box properties
-      }).map(function (key) {
-        var prefix = indent + '  ' + key + ': ',
+        Object.keys(box).filter(function (key) {
+          return key !== 'type' && key !== 'boxes'; // output all the box properties
+        }).map(function (key) {
+          var prefix = indent + '  ' + key + ': ',
             value = box[key]; // print out raw bytes as hexademical
 
-        if (value instanceof Uint8Array || value instanceof Uint32Array) {
-          var bytes = Array.prototype.slice.call(new Uint8Array(value.buffer, value.byteOffset, value.byteLength)).map(function (byte) {
-            return ' ' + ('00' + byte.toString(16)).slice(-2);
-          }).join('').match(/.{1,24}/g);
+          if (value instanceof Uint8Array || value instanceof Uint32Array) {
+            var bytes = Array.prototype.slice.call(new Uint8Array(value.buffer, value.byteOffset, value.byteLength)).map(function (byte) {
+              return ' ' + ('00' + byte.toString(16)).slice(-2);
+            }).join('').match(/.{1,24}/g);
 
-          if (!bytes) {
-            return prefix + '<>';
-          }
+            if (!bytes) {
+              return prefix + '<>';
+            }
 
-          if (bytes.length === 1) {
-            return prefix + '<' + bytes.join('').slice(1) + '>';
-          }
+            if (bytes.length === 1) {
+              return prefix + '<' + bytes.join('').slice(1) + '>';
+            }
 
-          return prefix + '<\n' + bytes.map(function (line) {
+            return prefix + '<\n' + bytes.map(function (line) {
+              return indent + '  ' + line;
+            }).join('\n') + '\n' + indent + '  >';
+          } // stringify generic objects
+
+
+          return prefix + JSON.stringify(value, null, 2).split('\n').map(function (line, index) {
+            if (index === 0) {
+              return line;
+            }
+
             return indent + '  ' + line;
-          }).join('\n') + '\n' + indent + '  >';
-        } // stringify generic objects
-
-
-        return prefix + JSON.stringify(value, null, 2).split('\n').map(function (line, index) {
-          if (index === 0) {
-            return line;
-          }
-
-          return indent + '  ' + line;
-        }).join('\n');
-      }).join('\n') + ( // recursively textify the child boxes
-      box.boxes ? '\n' + _textifyMp(box.boxes, depth + 1) : '');
+          }).join('\n');
+        }).join('\n') + ( // recursively textify the child boxes
+          box.boxes ? '\n' + _textifyMp(box.boxes, depth + 1) : '');
     }).join('\n');
   };
 
@@ -10542,119 +10543,119 @@
     0x09: 'video',
     0x12: 'metadata'
   },
-      hex = function hex(val) {
-    return '0x' + ('00' + val.toString(16)).slice(-2).toUpperCase();
-  },
-      hexStringList = function hexStringList(data) {
-    var arr = [],
+    hex = function hex(val) {
+      return '0x' + ('00' + val.toString(16)).slice(-2).toUpperCase();
+    },
+    hexStringList = function hexStringList(data) {
+      var arr = [],
         i;
 
-    while (data.byteLength > 0) {
-      i = 0;
-      arr.push(hex(data[i++]));
-      data = data.subarray(i);
-    }
+      while (data.byteLength > 0) {
+        i = 0;
+        arr.push(hex(data[i++]));
+        data = data.subarray(i);
+      }
 
-    return arr.join(' ');
-  },
-      parseAVCTag = function parseAVCTag(tag, obj) {
-    var avcPacketTypes = ['AVC Sequence Header', 'AVC NALU', 'AVC End-of-Sequence'],
+      return arr.join(' ');
+    },
+    parseAVCTag = function parseAVCTag(tag, obj) {
+      var avcPacketTypes = ['AVC Sequence Header', 'AVC NALU', 'AVC End-of-Sequence'],
         compositionTime = tag[1] & parseInt('01111111', 2) << 16 | tag[2] << 8 | tag[3];
-    obj = obj || {};
-    obj.avcPacketType = avcPacketTypes[tag[0]];
-    obj.CompositionTime = tag[1] & parseInt('10000000', 2) ? -compositionTime : compositionTime;
+      obj = obj || {};
+      obj.avcPacketType = avcPacketTypes[tag[0]];
+      obj.CompositionTime = tag[1] & parseInt('10000000', 2) ? -compositionTime : compositionTime;
 
-    if (tag[0] === 1) {
-      obj.nalUnitTypeRaw = hexStringList(tag.subarray(4, 100));
-    } else {
-      obj.data = hexStringList(tag.subarray(4));
-    }
+      if (tag[0] === 1) {
+        obj.nalUnitTypeRaw = hexStringList(tag.subarray(4, 100));
+      } else {
+        obj.data = hexStringList(tag.subarray(4));
+      }
 
-    return obj;
-  },
-      parseVideoTag = function parseVideoTag(tag, obj) {
-    var frameTypes = ['Unknown', 'Keyframe (for AVC, a seekable frame)', 'Inter frame (for AVC, a nonseekable frame)', 'Disposable inter frame (H.263 only)', 'Generated keyframe (reserved for server use only)', 'Video info/command frame'],
+      return obj;
+    },
+    parseVideoTag = function parseVideoTag(tag, obj) {
+      var frameTypes = ['Unknown', 'Keyframe (for AVC, a seekable frame)', 'Inter frame (for AVC, a nonseekable frame)', 'Disposable inter frame (H.263 only)', 'Generated keyframe (reserved for server use only)', 'Video info/command frame'],
         codecID = tag[0] & parseInt('00001111', 2);
-    obj = obj || {};
-    obj.frameType = frameTypes[(tag[0] & parseInt('11110000', 2)) >>> 4];
-    obj.codecID = codecID;
+      obj = obj || {};
+      obj.frameType = frameTypes[(tag[0] & parseInt('11110000', 2)) >>> 4];
+      obj.codecID = codecID;
 
-    if (codecID === 7) {
-      return parseAVCTag(tag.subarray(1), obj);
-    }
+      if (codecID === 7) {
+        return parseAVCTag(tag.subarray(1), obj);
+      }
 
-    return obj;
-  },
-      parseAACTag = function parseAACTag(tag, obj) {
-    var packetTypes = ['AAC Sequence Header', 'AAC Raw'];
-    obj = obj || {};
-    obj.aacPacketType = packetTypes[tag[0]];
-    obj.data = hexStringList(tag.subarray(1));
-    return obj;
-  },
-      parseAudioTag = function parseAudioTag(tag, obj) {
-    var formatTable = ['Linear PCM, platform endian', 'ADPCM', 'MP3', 'Linear PCM, little endian', 'Nellymoser 16-kHz mono', 'Nellymoser 8-kHz mono', 'Nellymoser', 'G.711 A-law logarithmic PCM', 'G.711 mu-law logarithmic PCM', 'reserved', 'AAC', 'Speex', 'MP3 8-Khz', 'Device-specific sound'],
+      return obj;
+    },
+    parseAACTag = function parseAACTag(tag, obj) {
+      var packetTypes = ['AAC Sequence Header', 'AAC Raw'];
+      obj = obj || {};
+      obj.aacPacketType = packetTypes[tag[0]];
+      obj.data = hexStringList(tag.subarray(1));
+      return obj;
+    },
+    parseAudioTag = function parseAudioTag(tag, obj) {
+      var formatTable = ['Linear PCM, platform endian', 'ADPCM', 'MP3', 'Linear PCM, little endian', 'Nellymoser 16-kHz mono', 'Nellymoser 8-kHz mono', 'Nellymoser', 'G.711 A-law logarithmic PCM', 'G.711 mu-law logarithmic PCM', 'reserved', 'AAC', 'Speex', 'MP3 8-Khz', 'Device-specific sound'],
         samplingRateTable = ['5.5-kHz', '11-kHz', '22-kHz', '44-kHz'],
         soundFormat = (tag[0] & parseInt('11110000', 2)) >>> 4;
-    obj = obj || {};
-    obj.soundFormat = formatTable[soundFormat];
-    obj.soundRate = samplingRateTable[(tag[0] & parseInt('00001100', 2)) >>> 2];
-    obj.soundSize = (tag[0] & parseInt('00000010', 2)) >>> 1 ? '16-bit' : '8-bit';
-    obj.soundType = tag[0] & parseInt('00000001', 2) ? 'Stereo' : 'Mono';
+      obj = obj || {};
+      obj.soundFormat = formatTable[soundFormat];
+      obj.soundRate = samplingRateTable[(tag[0] & parseInt('00001100', 2)) >>> 2];
+      obj.soundSize = (tag[0] & parseInt('00000010', 2)) >>> 1 ? '16-bit' : '8-bit';
+      obj.soundType = tag[0] & parseInt('00000001', 2) ? 'Stereo' : 'Mono';
 
-    if (soundFormat === 10) {
-      return parseAACTag(tag.subarray(1), obj);
-    }
+      if (soundFormat === 10) {
+        return parseAACTag(tag.subarray(1), obj);
+      }
 
-    return obj;
-  },
-      parseGenericTag = function parseGenericTag(tag) {
-    return {
-      tagType: tagTypes[tag[0]],
-      dataSize: tag[1] << 16 | tag[2] << 8 | tag[3],
-      timestamp: tag[7] << 24 | tag[4] << 16 | tag[5] << 8 | tag[6],
-      streamID: tag[8] << 16 | tag[9] << 8 | tag[10]
-    };
-  },
-      inspectFlvTag = function inspectFlvTag(tag) {
-    var header = parseGenericTag(tag);
+      return obj;
+    },
+    parseGenericTag = function parseGenericTag(tag) {
+      return {
+        tagType: tagTypes[tag[0]],
+        dataSize: tag[1] << 16 | tag[2] << 8 | tag[3],
+        timestamp: tag[7] << 24 | tag[4] << 16 | tag[5] << 8 | tag[6],
+        streamID: tag[8] << 16 | tag[9] << 8 | tag[10]
+      };
+    },
+    inspectFlvTag = function inspectFlvTag(tag) {
+      var header = parseGenericTag(tag);
 
-    switch (tag[0]) {
-      case 0x08:
-        parseAudioTag(tag.subarray(11), header);
-        break;
+      switch (tag[0]) {
+        case 0x08:
+          parseAudioTag(tag.subarray(11), header);
+          break;
 
-      case 0x09:
-        parseVideoTag(tag.subarray(11), header);
-        break;
-    }
+        case 0x09:
+          parseVideoTag(tag.subarray(11), header);
+          break;
+      }
 
-    return header;
-  },
-      inspectFlv = function inspectFlv(bytes) {
-    var i = 9,
+      return header;
+    },
+    inspectFlv = function inspectFlv(bytes) {
+      var i = 9,
         // header
-    dataSize,
+        dataSize,
         parsedResults = [],
         tag; // traverse the tags
 
-    i += 4; // skip previous tag size
+      i += 4; // skip previous tag size
 
-    while (i < bytes.byteLength) {
-      dataSize = bytes[i + 1] << 16;
-      dataSize |= bytes[i + 2] << 8;
-      dataSize |= bytes[i + 3];
-      dataSize += 11;
-      tag = bytes.subarray(i, i + dataSize);
-      parsedResults.push(inspectFlvTag(tag));
-      i += dataSize + 4;
-    }
+      while (i < bytes.byteLength) {
+        dataSize = bytes[i + 1] << 16;
+        dataSize |= bytes[i + 2] << 8;
+        dataSize |= bytes[i + 3];
+        dataSize += 11;
+        tag = bytes.subarray(i, i + dataSize);
+        parsedResults.push(inspectFlvTag(tag));
+        i += dataSize + 4;
+      }
 
-    return parsedResults;
-  },
-      textifyFlv = function textifyFlv(flvTagArray) {
-    return JSON.stringify(flvTagArray, null, 2);
-  };
+      return parsedResults;
+    },
+    textifyFlv = function textifyFlv(flvTagArray) {
+      return JSON.stringify(flvTagArray, null, 2);
+    };
 
   var flvInspector = {
     inspectTag: inspectFlvTag,
@@ -10956,8 +10957,8 @@
   probe.aac = utils;
   var ONE_SECOND_IN_TS = clock.ONE_SECOND_IN_TS;
   var MP2T_PACKET_LENGTH = 188,
-      // bytes
-  SYNC_BYTE = 0x47;
+    // bytes
+    SYNC_BYTE = 0x47;
   /**
    * walks through segment data looking for pat and pmt packets to parse out
    * program map table information
@@ -10965,9 +10966,9 @@
 
   var parsePsi_ = function parsePsi_(bytes, pmt) {
     var startIndex = 0,
-        endIndex = MP2T_PACKET_LENGTH,
-        packet,
-        type;
+      endIndex = MP2T_PACKET_LENGTH,
+      packet,
+      type;
 
     while (endIndex < bytes.byteLength) {
       // Look for a pair of start and end sync bytes in the data..
@@ -11010,12 +11011,12 @@
 
   var parseAudioPes_ = function parseAudioPes_(bytes, pmt, result) {
     var startIndex = 0,
-        endIndex = MP2T_PACKET_LENGTH,
-        packet,
-        type,
-        pesType,
-        pusi,
-        parsed;
+      endIndex = MP2T_PACKET_LENGTH,
+      packet,
+      type,
+      pesType,
+      pusi,
+      parsed;
     var endLoop = false; // Start walking from start of segment to get first audio packet
 
     while (endIndex <= bytes.byteLength) {
@@ -11114,15 +11115,15 @@
 
   var parseVideoPes_ = function parseVideoPes_(bytes, pmt, result) {
     var startIndex = 0,
-        endIndex = MP2T_PACKET_LENGTH,
-        packet,
-        type,
-        pesType,
-        pusi,
-        parsed,
-        frame,
-        i,
-        pes;
+      endIndex = MP2T_PACKET_LENGTH,
+      packet,
+      type,
+      pesType,
+      pusi,
+      parsed,
+      frame,
+      i,
+      pes;
     var endLoop = false;
     var currentFrame = {
       data: [],
@@ -11307,12 +11308,12 @@
 
   var inspectAac_ = function inspectAac_(bytes) {
     var endLoop = false,
-        audioCount = 0,
-        sampleRate = null,
-        timestamp = null,
-        frameSize = 0,
-        byteIndex = 0,
-        packet;
+      audioCount = 0,
+      sampleRate = null,
+      timestamp = null,
+      frameSize = 0,
+      byteIndex = 0,
+      packet;
 
     while (bytes.length - byteIndex >= 3) {
       var type = probe.aac.parseType(bytes, byteIndex);
