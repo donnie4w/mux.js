@@ -10528,7 +10528,9 @@
     parseHdlr: parse.hdlr,
     parseTfhd: parse.tfhd,
     parseTrun: parse.trun,
-    parseSidx: parse.sidx
+    parseSidx: parse.sidx,
+    parseMdhd: parse.mdhd,
+    parseMvhd: parse.mvhd,
   };
 
   /**
